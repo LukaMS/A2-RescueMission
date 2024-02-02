@@ -1,4 +1,4 @@
-package ca.mcmaster.se2aa4.island.teamXXX;
+package ca.mcmaster.se2aa4.island.team211;
 
 import java.io.StringReader;
 import org.apache.logging.log4j.LogManager;
@@ -12,23 +12,30 @@ public class Explorer implements IExplorerRaid {
 
     private final Logger logger = LogManager.getLogger();
 
+    private final DecisionMaker decisionMaker = new DecisionMaker();
+
+
     @Override
     public void initialize(String s) {
         logger.info("** Initializing the Exploration Command Center");
         JSONObject info = new JSONObject(new JSONTokener(new StringReader(s)));
         logger.info("** Initialization info:\n {}",info.toString(2));
-        String direction = info.getString("heading");
-        Integer batteryLevel = info.getInt("budget");
-        logger.info("The drone is facing {}", direction);
-        logger.info("Battery level is {}", batteryLevel);
+
+        Drone drone = new Drone();
+        drone.initialize(info);
+
+        logger.info("The drone is facing {}", drone.direction);
+        logger.info("Battery level is {}", drone.battery.batteryLevel);
+
     }
 
     @Override
     public String takeDecision() {
 
-        //Make class for decision making
         JSONObject decision = new JSONObject();
-        decision.put("action", "stop"); // we stop the exploration immediately
+        Object action = decisionMaker.makeDecision();
+
+        decision.put("action", action); // we stop the exploration immediately
         logger.info("** Decision: {}",decision.toString());
         return decision.toString();
     }
