@@ -25,6 +25,8 @@ public class Explorer implements IExplorerRaid {
 
     @Override
     public String takeDecision() {
+
+        //Make class for decision making
         JSONObject decision = new JSONObject();
         decision.put("action", "stop"); // we stop the exploration immediately
         logger.info("** Decision: {}",decision.toString());
