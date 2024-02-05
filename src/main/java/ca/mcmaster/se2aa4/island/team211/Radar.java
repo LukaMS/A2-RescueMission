@@ -5,7 +5,4 @@ public class Radar {
 
     public Object found = null;
 
-    public void determineResults(){
-
-    }
 }

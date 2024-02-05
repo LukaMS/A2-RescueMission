@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import eu.ace_design.island.bot.IExplorerRaid;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -14,6 +15,8 @@ public class Explorer implements IExplorerRaid {
 
     private final DecisionMaker decisionMaker = new DecisionMaker();
 
+    private Drone drone;
+
 
     @Override
     public void initialize(String s) {
@@ -21,7 +24,7 @@ public class Explorer implements IExplorerRaid {
         JSONObject info = new JSONObject(new JSONTokener(new StringReader(s)));
         logger.info("** Initialization info:\n {}",info.toString(2));
 
-        Drone drone = new Drone();
+        this.drone = new Drone();
         drone.initialize(info);
 
         logger.info("The drone is facing {}", drone.direction);
@@ -35,7 +38,7 @@ public class Explorer implements IExplorerRaid {
         JSONObject decision = new JSONObject();
         Object action = decisionMaker.makeDecision();
 
-        decision.put("action", action); // we stop the exploration immediately
+        decision.put("action", action);
         logger.info("** Decision: {}",decision.toString());
         return decision.toString();
     }
@@ -44,12 +47,39 @@ public class Explorer implements IExplorerRaid {
     public void acknowledgeResults(String s) {
         JSONObject response = new JSONObject(new JSONTokener(new StringReader(s)));
         logger.info("** Response received:\n"+response.toString(2));
-        Integer cost = response.getInt("cost");
-        logger.info("The cost of the action was {}", cost);
-        String status = response.getString("status");
-        logger.info("The status of the drone is {}", status);
+
+        Action.cost = response.getInt("cost");
+        logger.info("The cost of the action was {}", Action.cost);
+        drone.battery.discharge(Action.cost);
+
+        Drone.status = response.getString("status");
+        logger.info("The status of the drone is {}", Drone.status);
+
         JSONObject extraInfo = response.getJSONObject("extras");
+        extractExtraInfo(extraInfo);
+
         logger.info("Additional information received: {}", extraInfo);
+
+    }
+
+    private void extractExtraInfo(JSONObject extraInfo) {
+        try {
+            switch (DecisionMaker.lastAction) {
+                case echo -> {
+                    drone.radar.range = (Integer) extraInfo.getJSONArray("range").get(0);
+                    drone.radar.found = extraInfo.getJSONArray("found").get(0);
+                }
+                case scan -> {
+                    drone.photoScanner.biomes = extraInfo.getJSONArray("biomes");
+                    Object creek = extraInfo.getJSONArray("creeks").get(0);
+                    Object site = extraInfo.getJSONArray("sites").get(0);
+                    drone.photoScanner.creeks.add(creek);
+                    drone.photoScanner.sites.add(site);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

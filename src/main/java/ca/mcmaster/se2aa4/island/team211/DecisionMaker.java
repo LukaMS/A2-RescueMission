@@ -1,16 +1,29 @@
 package ca.mcmaster.se2aa4.island.team211;
 
+import org.json.JSONObject;
+
 import java.util.Objects;
 
 public class DecisionMaker {
 
-    private Action lastAction = null;
+    static Action lastAction = null;
+
     public Action makeDecision() {
-        Action action = Action.fly;
-        if (Objects.equals(lastAction, Action.fly)){
-            action = Action.stop;
+        Action action = null;
+        switch(lastAction){
+            case null -> {action = Action.fly;}
+            case fly -> {action = Action.scan;}
+            case stop -> {}
+            case heading -> {}
+            case echo -> {}
+            case scan -> {}
         }
-        this.lastAction = action;
+
+        lastAction = action;
         return action;
     }
+
+
+
+
 }
