@@ -5,7 +5,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import eu.ace_design.island.bot.IExplorerRaid;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -13,7 +12,7 @@ public class Explorer implements IExplorerRaid {
 
     private final Logger logger = LogManager.getLogger();
 
-    private final DecisionMaker decisionMaker = new DecisionMaker();
+    private final DecisionMaker decisionMaker = new IslandFinder();
 
     private Drone drone;
 
@@ -64,17 +63,17 @@ public class Explorer implements IExplorerRaid {
 
     private void extractExtraInfo(JSONObject extraInfo) {
         try {
-            switch (DecisionMaker.lastAction) {
+            switch (IslandFinder.lastAction) {
                 case echo -> {
                     drone.radar.range = (Integer) extraInfo.getJSONArray("range").get(0);
                     drone.radar.found = extraInfo.getJSONArray("found").get(0);
                 }
                 case scan -> {
-                    drone.photoScanner.biomes = extraInfo.getJSONArray("biomes");
-                    Object creek = extraInfo.getJSONArray("creeks").get(0);
-                    Object site = extraInfo.getJSONArray("sites").get(0);
-                    drone.photoScanner.creeks.add(creek);
-                    drone.photoScanner.sites.add(site);
+                    Drone.currentBiomes = extraInfo.getJSONArray("biomes");
+                    Creek creek = (Creek) extraInfo.getJSONArray("creeks").get(0);
+                    EmergSite site = (EmergSite) extraInfo.getJSONArray("sites").get(0);
+                    Creek.creeks.add(creek);
+                    EmergSite.sites.add(site);
                 }
             }
         }catch (Exception e){
