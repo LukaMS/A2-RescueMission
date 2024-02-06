@@ -1,4 +1,4 @@
-package ca.mcmaster.se2aa4.island.team211;
+package ca.mcmaster.se2aa4.island.team211.ControlCentre;
 
 public enum Action {
     fly,

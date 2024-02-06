@@ -1,8 +1,10 @@
-package ca.mcmaster.se2aa4.island.team211;
+package ca.mcmaster.se2aa4.island.team211.ControlCentre;
+
+import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
 
 public class IslandFinder implements DecisionMaker {
 
-    static Action lastAction = null;
+    public static Action lastAction = null;
 
     public static Action action = null;
 

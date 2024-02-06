@@ -1,6 +1,13 @@
 package ca.mcmaster.se2aa4.island.team211;
 
 import java.io.StringReader;
+
+import ca.mcmaster.se2aa4.island.team211.ControlCentre.Action;
+import ca.mcmaster.se2aa4.island.team211.ControlCentre.DecisionMaker;
+import ca.mcmaster.se2aa4.island.team211.ControlCentre.IslandFinder;
+import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
+import ca.mcmaster.se2aa4.island.team211.Locations.Creek;
+import ca.mcmaster.se2aa4.island.team211.Locations.EmergSite;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +33,7 @@ public class Explorer implements IExplorerRaid {
         this.drone = new Drone();
         drone.initialize(info);
 
-        logger.info("The drone is facing {}", drone.direction);
+        logger.info("The drone is facing {}", Drone.direction);
         logger.info("Battery level is {}", drone.battery.batteryLevel);
 
     }

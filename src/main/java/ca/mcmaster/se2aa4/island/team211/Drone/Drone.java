@@ -1,4 +1,4 @@
-package ca.mcmaster.se2aa4.island.team211;
+package ca.mcmaster.se2aa4.island.team211.Drone;
 
 import org.json.JSONObject;
 
@@ -7,8 +7,8 @@ public class Drone {
 
     public static Object currentBiomes = null;
     public final Battery battery = new Battery(); //We have to discharge battery by cost
-    static String status = "OK";
-    final Radar radar = new Radar();
+    public static String status = "OK";
+    public final Radar radar = new Radar();
 
     public void initialize(JSONObject info) {
         this.direction = info.getString("heading");
