@@ -8,6 +8,8 @@ import ca.mcmaster.se2aa4.island.team211.ControlCentre.IslandFinder;
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
 import ca.mcmaster.se2aa4.island.team211.Locations.Creek;
 import ca.mcmaster.se2aa4.island.team211.Locations.EmergSite;
+import eu.ace_design.island.game.Plane;
+import eu.ace_design.island.game.Plane$;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -65,7 +67,6 @@ public class Explorer implements IExplorerRaid {
         drone.extractdata(extraInfo);
 
         logger.info("Additional information received: {}", extraInfo);
-
     }
 
 
