@@ -4,12 +4,8 @@ import java.io.StringReader;
 
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.Action;
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.DecisionMaker;
-import ca.mcmaster.se2aa4.island.team211.ControlCentre.IslandFinder;
+import ca.mcmaster.se2aa4.island.team211.ControlCentre.FindStart;
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
-import ca.mcmaster.se2aa4.island.team211.Locations.Creek;
-import ca.mcmaster.se2aa4.island.team211.Locations.EmergSite;
-import eu.ace_design.island.game.Plane;
-import eu.ace_design.island.game.Plane$;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,8 +16,6 @@ import org.json.JSONTokener;
 public class Explorer implements IExplorerRaid {
 
     private final Logger logger = LogManager.getLogger();
-
-    private final DecisionMaker decisionMaker = new IslandFinder();
 
     private Drone drone;
 
@@ -42,10 +36,16 @@ public class Explorer implements IExplorerRaid {
 
     @Override
     public String takeDecision() {
-        JSONObject decision = decisionMaker.makeDecision(drone);
-
-        logger.info("** Decision: {}",decision.toString());
-        return decision.toString();
+        JSONObject decision = null;
+        logger.info("** Current Location X: " + drone.printCoords()[0] + " Y: " + drone.printCoords()[1]);
+        try {
+            decision = drone.getDecision();
+            logger.info("** Decision: {}",decision.toString());
+            return decision.toString();
+        } catch (Exception e){
+            logger.error(e.toString());
+        }
+        return null;
     }
 
     @Override

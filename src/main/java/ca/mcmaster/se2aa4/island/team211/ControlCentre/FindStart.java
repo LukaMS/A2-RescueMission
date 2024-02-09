@@ -3,14 +3,14 @@ package ca.mcmaster.se2aa4.island.team211.ControlCentre;
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
 import org.json.JSONObject;
 
-public class IslandFinder implements DecisionMaker {
+public class FindStart implements DecisionMaker{
     private final Drone drone;
     public static Action lastAction = null;
     public static Action action = null;
     private boolean foundStart = false;
     private int count = 0;
 
-    public IslandFinder(Drone drone) {
+    public FindStart(Drone drone) {
         this.drone = drone;
     }
 

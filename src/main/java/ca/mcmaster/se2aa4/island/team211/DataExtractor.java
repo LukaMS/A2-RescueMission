@@ -1,5 +1,6 @@
 package ca.mcmaster.se2aa4.island.team211;
 
+import ca.mcmaster.se2aa4.island.team211.ControlCentre.DecisionMaker;
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.IslandFinder;
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
 import ca.mcmaster.se2aa4.island.team211.Drone.Radar;
@@ -11,12 +12,18 @@ import org.json.JSONObject;
 
 
 public class DataExtractor {
-    public void extract(JSONObject extraInfo, Radar radar) {
+    public void extract(JSONObject extraInfo, Radar radar, DecisionMaker islandFinder) {
         try {
-            switch (IslandFinder.lastAction) {
+            switch (islandFinder.getLastAction()) {
                 case echo -> {
-                    radar.range = (Integer) extraInfo.getJSONArray("range").get(0);
-                    radar.found = extraInfo.getJSONArray("found").get(0);
+                    try{
+                        int range = extraInfo.getInt("range");
+                        radar.range = range;
+                        radar.found = extraInfo.getString("found");
+                    } catch (Exception e){
+                        System.out.println(e);
+                    }
+
                 }
                 case scan -> {
                     Drone.currentBiomes = extraInfo.getJSONArray("biomes");
