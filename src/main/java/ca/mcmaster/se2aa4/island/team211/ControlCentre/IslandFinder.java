@@ -5,7 +5,6 @@ import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
 public class IslandFinder implements DecisionMaker {
 
     public static Action lastAction = null;
-
     public static Action action = null;
 
     private int count = 0;
