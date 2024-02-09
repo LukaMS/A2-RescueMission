@@ -3,48 +3,115 @@ package ca.mcmaster.se2aa4.island.team211.ControlCentre;
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 public class IslandFinder implements DecisionMaker {
+
     private final Drone drone;
     public static Action lastAction = null;
     public static Action action = null;
-    private boolean foundStart = false;
-    private int count = 0;
 
-    public IslandFinder(Drone drone) {
+    public IslandFinder(Drone drone){
         this.drone = drone;
     }
 
+    /*
+    ECHO forward --> found --> Fly forward until it is reached
+    ECHO forward --> OUT_OF_RANGE --> Fly forward --> ECHO to Left and Right until find "GROUND"
+     */
     @Override
     public JSONObject makeDecision() {
         action = null;
-        JSONObject parameters;
-        if(!foundStart){
-            if(lastAction == null){
-                parameters = findStart(drone);
+        switch(lastAction){
+            case null -> {
                 action = Action.echo;
+                JSONObject parameter = new JSONObject();
+                parameter.put("direction", drone.direction);
                 lastAction = action;
-                return sendDecision(action, parameters);
-            } else {
-                drone.setStart();
-                foundStart = true;
-                action = Action.fly;
+                return sendDecision(action,parameter);
+            }
+            case echo -> {
+                if (Objects.equals(drone.radar.found,"GROUND")){
+                    action = Action.fly;
+                    lastAction = Action.flyToGround;
+                    return sendDecision(action);
+                }else if (Objects.equals(drone.radar.found,"OUT_OF_RANGE")){
+                    action = Action.fly;
+                    lastAction = Action.flyBlind;
+                    return sendDecision(action);
+                }
+            }
+            case flyToGround -> {
+                action = Action.scan;
                 lastAction = action;
                 return sendDecision(action);
             }
-        }
-        if(lastAction == Action.fly){
-            action = Action.stop;
-            lastAction = action;
-            return sendDecision(action);
-        }
-        return sendDecision(Action.stop);
-    }
+            case flyBlind ->{
+                action = Action.echo;
+                JSONObject parameter = new JSONObject();
+                parameter.put("direction", drone.left);
+                lastAction = Action.echoLeft;
+                return sendDecision(action,parameter);
+            }
+            case echoLeft ->{
+                if (Objects.equals(drone.radar.found,"GROUND")){
+                    action = Action.heading;
+                    JSONObject parameter = new JSONObject();
+                    parameter.put("direction", drone.left);
+                    lastAction = Action.heading;
+                    return sendDecision(action,parameter);
+                }else{
+                    action = Action.echo;
+                    JSONObject parameter = new JSONObject();
+                    parameter.put("direction", drone.right);
+                    lastAction = Action.echoRight;
+                    return sendDecision(action,parameter);
+                }
+            }
+            case echoRight ->{
+                if (Objects.equals(drone.radar.found,"GROUND")) {
+                    action = Action.heading;
+                    JSONObject parameter = new JSONObject();
+                    parameter.put("direction", drone.right);
+                    lastAction = Action.heading;
+                    return sendDecision(action, parameter);
+                } else{
+                    action = Action.scan;
+                    lastAction = Action.scan;
+                    return sendDecision(action);
+                }
+            }
 
-    @Override
-    public Action getLastAction() {
-        return lastAction;
-    }
+            case heading ->{
+                action = Action.scan;
+                lastAction = Action.scan;
+                return sendDecision(action);
+            }
 
+            case scan ->{
+                if (Objects.equals(drone.radar.found,"GROUND")) {
+                    if (!Objects.equals(drone.currentBiomes.get(0), "OCEAN")) {
+                        action = Action.stop;
+                        return sendDecision(action);
+                    } else {
+                        action = Action.fly;
+                        lastAction = Action.flyToGround;
+                        return sendDecision(action);
+                    }
+                } else {
+                    action = Action.fly;
+                    lastAction = Action.flyBlind;
+                    return sendDecision(action);
+                }
+            }
+            case fly -> {return null;}
+
+            case stop -> {return null;}
+
+            default -> {return null;}
+        }
+        return null;
+    }
 
     public JSONObject sendDecision(Action action, JSONObject parameters){
         JSONObject decision = new JSONObject();
@@ -58,17 +125,12 @@ public class IslandFinder implements DecisionMaker {
         return decision;
     }
 
-    public JSONObject findStart(Drone drone){
-        JSONObject params = new JSONObject();
-        String currentHeading = Drone.direction;
-        switch (currentHeading){
-            case "N", "S":
-                params.put("direction", "W");
-                break;
-            case "E", "W":
-                params.put("direction", "N");
-                break;
-        }
-        return params;
+    public Action getLastAction(){
+        return lastAction;
     }
+
+
+
+
+
 }

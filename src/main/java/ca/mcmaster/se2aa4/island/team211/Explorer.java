@@ -66,7 +66,6 @@ public class Explorer implements IExplorerRaid {
         logger.info("Additional information received: {}", extraInfo);
     }
 
-
     @Override
     public String deliverFinalReport() {
         return "no creek found";

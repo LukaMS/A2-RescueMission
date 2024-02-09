@@ -15,15 +15,9 @@ public class DataExtractor {
     public void extract(JSONObject extraInfo, Radar radar, DecisionMaker islandFinder) {
         try {
             switch (islandFinder.getLastAction()) {
-                case echo -> {
-                    try{
-                        int range = extraInfo.getInt("range");
-                        radar.range = range;
-                        radar.found = extraInfo.getString("found");
-                    } catch (Exception e){
-                        System.out.println(e);
-                    }
-
+                case echo, echoLeft, echoRight -> {
+                    radar.range = extraInfo.getInt("range");
+                    radar.found = extraInfo.getString("found");
                 }
                 case scan -> {
                     Drone.currentBiomes = extraInfo.getJSONArray("biomes");

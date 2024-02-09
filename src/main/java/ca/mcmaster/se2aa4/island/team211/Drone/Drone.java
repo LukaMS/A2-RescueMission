@@ -2,14 +2,17 @@ package ca.mcmaster.se2aa4.island.team211.Drone;
 
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.DecisionMaker;
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.FindStart;
+import ca.mcmaster.se2aa4.island.team211.ControlCentre.IslandFinder;
 import ca.mcmaster.se2aa4.island.team211.DataExtractor;
 import ca.mcmaster.se2aa4.island.team211.Locations.Coordinate;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 
 public class Drone {
     public static String direction;
-    public static Object currentBiomes = null;
+    public String left,right;
+    public static JSONArray currentBiomes = null;
     public final Battery battery = new Battery();
     public static String status = "OK";
     public final Radar radar = new Radar();
@@ -27,7 +30,7 @@ public class Drone {
     public void initialize(JSONObject info) {
         direction = info.getString("heading");
         battery.batteryLevel = info.getInt("budget");
-        decisionMaker = new FindStart(this);
+        decisionMaker = new IslandFinder(this);
     }
 
 
@@ -36,7 +39,18 @@ public class Drone {
     }
 
     public JSONObject getDecision(){
+        this.getSides();
         return decisionMaker.makeDecision();
+    }
+
+    public void getSides(){
+        switch (this.direction){
+            case "N": {left = "W";right = "E"; break;}
+            case "S": {left = "E";right = "W"; break;}
+            case "E": {left = "N";right = "S"; break;}
+            case "W": {left = "S";right = "N"; break;}
+
+        }
     }
 
     public void setStart(){
