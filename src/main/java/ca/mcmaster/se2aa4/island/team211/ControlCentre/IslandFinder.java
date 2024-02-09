@@ -1,6 +1,7 @@
 package ca.mcmaster.se2aa4.island.team211.ControlCentre;
 
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
+import org.json.JSONObject;
 
 public class IslandFinder implements DecisionMaker {
 
@@ -10,7 +11,7 @@ public class IslandFinder implements DecisionMaker {
     private int count = 0;
 
     @Override
-    public Object makeDecision(Drone drone) {
+    public JSONObject makeDecision(Drone drone) {
         action = null;
         switch(lastAction){
             case null : {
@@ -34,7 +35,19 @@ public class IslandFinder implements DecisionMaker {
                 break;
         }
         lastAction = action;
-        return action;
+        return sendDecision(action);
+    }
+
+    public JSONObject sendDecision(Action action, JSONObject parameters){
+        JSONObject decision = new JSONObject();
+        decision.put("action", action).put("parameters", parameters);
+        return decision;
+    }
+
+    public JSONObject sendDecision(Action action){
+        JSONObject decision = new JSONObject();
+        decision.put("action", action);
+        return decision;
     }
 
 

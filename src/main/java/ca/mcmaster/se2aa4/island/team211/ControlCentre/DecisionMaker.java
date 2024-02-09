@@ -1,7 +1,8 @@
 package ca.mcmaster.se2aa4.island.team211.ControlCentre;
 
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
+import org.json.JSONObject;
 
 public interface DecisionMaker {
-    Object makeDecision(Drone drone);
+    JSONObject makeDecision(Drone drone);
 }
