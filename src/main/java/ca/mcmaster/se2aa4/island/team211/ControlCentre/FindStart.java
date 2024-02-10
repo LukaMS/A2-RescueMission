@@ -8,7 +8,6 @@ public class FindStart implements DecisionMaker{
     public static Action lastAction = null;
     public static Action action = null;
     private boolean foundStart = false;
-    private int count = 0;
 
     public FindStart(Drone drone) {
         this.drone = drone;

@@ -15,10 +15,6 @@ public class IslandFinder implements DecisionMaker {
         this.drone = drone;
     }
 
-    /*
-    ECHO forward --> found --> Fly forward until it is reached
-    ECHO forward --> OUT_OF_RANGE --> Fly forward --> ECHO to Left and Right until find "GROUND"
-     */
     @Override
     public JSONObject makeDecision() {
         action = null;
@@ -96,23 +92,18 @@ public class IslandFinder implements DecisionMaker {
                 if (Objects.equals(drone.radar.found,"GROUND")) {
                     if (!Objects.equals(drone.currentBiomes.get(0), "OCEAN")) {
                         action = Action.stop;
-                        return sendDecision(action);
                     } else {
                         action = Action.fly;
                         lastAction = Action.flyToGround;
                         drone.forward();
-                        return sendDecision(action);
                     }
                 } else {
                     action = Action.fly;
                     lastAction = Action.flyBlind;
                     drone.forward();
-                    return sendDecision(action);
                 }
+                return sendDecision(action);
             }
-            case fly -> {return null;}
-
-            case stop -> {return null;}
 
             default -> {return null;}
         }

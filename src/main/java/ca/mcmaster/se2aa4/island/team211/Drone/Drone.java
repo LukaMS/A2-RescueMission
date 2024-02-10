@@ -1,6 +1,5 @@
 package ca.mcmaster.se2aa4.island.team211.Drone;
 
-import ca.mcmaster.se2aa4.island.team211.ControlCentre.Action;
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.DecisionMaker;
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.FindStart;
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.IslandFinder;
@@ -13,7 +12,7 @@ import org.json.JSONObject;
 public class Drone {
     public String direction;
     public String left,right;
-    public static JSONArray currentBiomes = null;
+    public JSONArray currentBiomes = null;
     public final Battery battery = new Battery();
     public static String status = "OK";
     public final Radar radar = new Radar();
@@ -36,7 +35,7 @@ public class Drone {
 
 
     public void extractdata(JSONObject extraInfo) {
-        dataExtractor.extract(extraInfo, radar, decisionMaker);
+        dataExtractor.extract(extraInfo,this, decisionMaker);
     }
 
     public JSONObject getDecision(){
@@ -126,18 +125,10 @@ public class Drone {
 
     public void forward(){
         switch (direction){
-            case "N" -> {
-                y_cord--;
-            }
-            case "E" -> {
-                x_cord++;
-            }
-            case "S" -> {
-                y_cord++;
-            }
-            case "W" -> {
-                x_cord--;
-            }
+            case "N" -> y_cord--;
+            case "E" -> x_cord++;
+            case "S" -> y_cord++;
+            case "W" -> x_cord--;
         }
     }
 }

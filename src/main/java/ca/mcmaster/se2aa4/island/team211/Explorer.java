@@ -3,8 +3,6 @@ package ca.mcmaster.se2aa4.island.team211;
 import java.io.StringReader;
 
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.Action;
-import ca.mcmaster.se2aa4.island.team211.ControlCentre.DecisionMaker;
-import ca.mcmaster.se2aa4.island.team211.ControlCentre.FindStart;
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +34,7 @@ public class Explorer implements IExplorerRaid {
 
     @Override
     public String takeDecision() {
-        JSONObject decision = null;
+        JSONObject decision;
         logger.info("** Current Location X: " + drone.printCoords()[0] + " Y: " + drone.printCoords()[1]);
         try {
             decision = drone.getDecision();

@@ -1,9 +1,7 @@
 package ca.mcmaster.se2aa4.island.team211;
 
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.DecisionMaker;
-import ca.mcmaster.se2aa4.island.team211.ControlCentre.IslandFinder;
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
-import ca.mcmaster.se2aa4.island.team211.Drone.Radar;
 import ca.mcmaster.se2aa4.island.team211.Locations.Coordinate;
 import ca.mcmaster.se2aa4.island.team211.Locations.Creek;
 import ca.mcmaster.se2aa4.island.team211.Locations.EmergSite;
@@ -12,15 +10,15 @@ import org.json.JSONObject;
 
 
 public class DataExtractor {
-    public void extract(JSONObject extraInfo, Radar radar, DecisionMaker islandFinder) {
+    public void extract(JSONObject extraInfo, Drone drone, DecisionMaker islandFinder) {
         try {
             switch (islandFinder.getLastAction()) {
                 case echo, echoLeft, echoRight -> {
-                    radar.range = extraInfo.getInt("range");
-                    radar.found = extraInfo.getString("found");
+                    drone.radar.range = extraInfo.getInt("range");
+                    drone.radar.found = extraInfo.getString("found");
                 }
                 case scan -> {
-                    Drone.currentBiomes = extraInfo.getJSONArray("biomes");
+                    drone.currentBiomes = extraInfo.getJSONArray("biomes");
                     Creek creek = (Creek) extraInfo.getJSONArray("creeks").get(0);
                     Coordinate creekCord = Drone.getCordinates();
                     EmergSite site = (EmergSite) extraInfo.getJSONArray("sites").get(0);
