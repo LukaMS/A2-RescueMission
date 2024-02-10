@@ -34,10 +34,12 @@ public class IslandFinder implements DecisionMaker {
                 if (Objects.equals(drone.radar.found,"GROUND")){
                     action = Action.fly;
                     lastAction = Action.flyToGround;
+                    drone.forward();
                     return sendDecision(action);
                 }else if (Objects.equals(drone.radar.found,"OUT_OF_RANGE")){
                     action = Action.fly;
                     lastAction = Action.flyBlind;
+                    drone.forward();
                     return sendDecision(action);
                 }
             }
@@ -59,6 +61,7 @@ public class IslandFinder implements DecisionMaker {
                     JSONObject parameter = new JSONObject();
                     parameter.put("direction", drone.left);
                     lastAction = Action.heading;
+                    drone.turnLeft();
                     return sendDecision(action,parameter);
                 }else{
                     action = Action.echo;
@@ -74,6 +77,7 @@ public class IslandFinder implements DecisionMaker {
                     JSONObject parameter = new JSONObject();
                     parameter.put("direction", drone.right);
                     lastAction = Action.heading;
+                    drone.turnRight();
                     return sendDecision(action, parameter);
                 } else{
                     action = Action.scan;
@@ -96,11 +100,13 @@ public class IslandFinder implements DecisionMaker {
                     } else {
                         action = Action.fly;
                         lastAction = Action.flyToGround;
+                        drone.forward();
                         return sendDecision(action);
                     }
                 } else {
                     action = Action.fly;
                     lastAction = Action.flyBlind;
+                    drone.forward();
                     return sendDecision(action);
                 }
             }

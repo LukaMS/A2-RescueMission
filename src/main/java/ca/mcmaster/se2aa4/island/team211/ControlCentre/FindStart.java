@@ -27,7 +27,7 @@ public class FindStart implements DecisionMaker{
             } else {
                 drone.setStart();
                 foundStart = true;
-                action = Action.fly;
+                action = Action.scan;
                 lastAction = action;
                 return sendDecision(action);
             }
@@ -60,7 +60,7 @@ public class FindStart implements DecisionMaker{
 
     public JSONObject findStart(Drone drone){
         JSONObject params = new JSONObject();
-        String currentHeading = Drone.direction;
+        String currentHeading = drone.direction;
         switch (currentHeading){
             case "N", "S":
                 params.put("direction", "W");

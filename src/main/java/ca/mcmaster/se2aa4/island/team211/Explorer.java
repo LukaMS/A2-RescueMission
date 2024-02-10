@@ -29,7 +29,7 @@ public class Explorer implements IExplorerRaid {
         this.drone = new Drone();
         drone.initialize(info);
 
-        logger.info("The drone is facing {}", Drone.direction);
+        logger.info("The drone is facing {}", drone.direction);
         logger.info("Battery level is {}", drone.battery.batteryLevel);
 
     }

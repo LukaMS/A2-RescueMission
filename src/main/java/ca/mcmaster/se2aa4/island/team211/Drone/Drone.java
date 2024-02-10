@@ -1,5 +1,6 @@
 package ca.mcmaster.se2aa4.island.team211.Drone;
 
+import ca.mcmaster.se2aa4.island.team211.ControlCentre.Action;
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.DecisionMaker;
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.FindStart;
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.IslandFinder;
@@ -10,7 +11,7 @@ import org.json.JSONObject;
 
 
 public class Drone {
-    public static String direction;
+    public String direction;
     public String left,right;
     public static JSONArray currentBiomes = null;
     public final Battery battery = new Battery();
@@ -30,7 +31,7 @@ public class Drone {
     public void initialize(JSONObject info) {
         direction = info.getString("heading");
         battery.batteryLevel = info.getInt("budget");
-        decisionMaker = new IslandFinder(this);
+        decisionMaker = new FindStart(this);
     }
 
 
@@ -64,11 +65,79 @@ public class Drone {
                 x_cord = 1;
                 break;
         }
+        decisionMaker = new IslandFinder(this);
     }
     public Integer[] printCoords(){
         Integer[] coords = new Integer[2];
         coords[0] = x_cord;
         coords[1] = y_cord;
         return coords;
+    }
+
+    public void turnLeft(){
+        switch  (direction){
+            case "N" -> {
+                x_cord -= 1;
+                y_cord -= 1;
+                direction = "W";
+            }
+            case "E" -> {
+                x_cord += 1;
+                y_cord -= 1;
+                direction = "N";
+            }
+            case "S" -> {
+                x_cord += 1;
+                y_cord += 1;
+                direction = "E";
+            }
+            case "W" -> {
+                x_cord -= 1;
+                y_cord += 1;
+                direction = "S";
+            }
+        }
+    }
+
+    public void turnRight(){
+        switch  (direction){
+            case "N" -> {
+                x_cord += 1;
+                y_cord -= 1;
+                direction = "E";
+            }
+            case "E" -> {
+                x_cord += 1;
+                y_cord += 1;
+                direction = "S";
+            }
+            case "S" -> {
+                x_cord -= 1;
+                y_cord += 1;
+                direction = "W";
+            }
+            case "W" -> {
+                x_cord -= 1;
+                y_cord -= 1;
+                direction = "N";
+            }
+        }
+    }
+
+    public void forward(){
+        switch (direction){
+            case "N" -> {
+                y_cord--;
+            }
+            case "E" -> {
+                x_cord++;
+            }
+            case "S" -> {
+                y_cord++;
+            }
+            case "W" -> {
+                x_cord--;
+            }
+        }
     }
 }
