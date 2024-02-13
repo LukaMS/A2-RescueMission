@@ -8,4 +8,9 @@ import org.apache.logging.log4j.Logger;
 public interface DecisionMaker {
     JSONObject makeDecision();
     Action getLastAction();
+
+    JSONObject sendDecision(Action action, JSONObject parameters);
+
+    JSONObject sendDecision(Action action);
+
 }
