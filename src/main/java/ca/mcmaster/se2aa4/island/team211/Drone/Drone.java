@@ -16,16 +16,11 @@ public class Drone {
     public final Battery battery = new Battery();
     public static String status = "OK";
     public final Radar radar = new Radar();
-    private DecisionMaker decisionMaker;
+    DecisionMaker decisionMaker;
     private final DataExtractor dataExtractor = new DataExtractor();
 
-    public static Integer x_cord;
-    public static Integer y_cord;
-
-    public static Coordinate getCordinates() {
-        return new Coordinate(x_cord, y_cord);
-    }
-
+    public Integer x_cord;
+    public Integer y_cord;
 
     public void initialize(JSONObject info) {
         direction = info.getString("heading");

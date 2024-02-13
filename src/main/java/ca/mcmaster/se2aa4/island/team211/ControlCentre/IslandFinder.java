@@ -8,7 +8,8 @@ import java.util.Objects;
 public class IslandFinder implements DecisionMaker {
 
     private final Drone drone;
-    public static Action lastAction = null;
+    public static Action lastAction;
+    public JSONObject lastDecision;
     public static Action action = null;
 
     public IslandFinder(Drone drone){
@@ -90,7 +91,7 @@ public class IslandFinder implements DecisionMaker {
 
             case scan ->{
                 if (Objects.equals(drone.radar.found,"GROUND")) {
-                    if (!Objects.equals(drone.currentBiomes.get(0), "OCEAN")) {
+                    if (!overOcean()) {
                         action = Action.stop;
                     } else {
                         action = Action.fly;
@@ -113,17 +114,23 @@ public class IslandFinder implements DecisionMaker {
     public JSONObject sendDecision(Action action, JSONObject parameters){
         JSONObject decision = new JSONObject();
         decision.put("action", action).put("parameters", parameters);
+        lastDecision = decision;
         return decision;
     }
 
     public JSONObject sendDecision(Action action){
         JSONObject decision = new JSONObject();
         decision.put("action", action);
+        lastDecision = decision;
         return decision;
     }
 
     public Action getLastAction(){
         return lastAction;
+    }
+
+    public boolean overOcean(){
+        return Objects.equals(drone.currentBiomes.get(0), "OCEAN");
     }
 
 
