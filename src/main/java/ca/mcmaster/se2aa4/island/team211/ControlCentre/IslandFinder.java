@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 public class IslandFinder implements DecisionMaker {
-
     private final Drone drone;
     public static Action lastAction;
     public JSONObject lastDecision;
@@ -97,6 +96,7 @@ public class IslandFinder implements DecisionMaker {
                         action = Action.fly;
                         lastAction = Action.flyToGround;
                         drone.forward();
+
                     }
                 } else {
                     action = Action.fly;
