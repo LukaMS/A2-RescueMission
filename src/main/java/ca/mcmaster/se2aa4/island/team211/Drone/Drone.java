@@ -16,7 +16,7 @@ public class Drone {
     public final Battery battery = new Battery();
     public static String status = "OK";
     public final Radar radar = new Radar();
-    DecisionMaker decisionMaker;
+    public DecisionMaker decisionMaker;
     private final DataExtractor dataExtractor = new DataExtractor();
 
     public Integer x_cord;

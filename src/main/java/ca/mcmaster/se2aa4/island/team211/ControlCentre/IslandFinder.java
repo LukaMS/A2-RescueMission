@@ -91,7 +91,7 @@ public class IslandFinder implements DecisionMaker {
             case scan ->{
                 if (Objects.equals(drone.radar.found,"GROUND")) {
                     if (!overOcean()) {
-                        action = Action.stop;
+                        drone.decisionMaker = new GridSearch(drone);
                     } else {
                         action = Action.fly;
                         lastAction = Action.flyToGround;

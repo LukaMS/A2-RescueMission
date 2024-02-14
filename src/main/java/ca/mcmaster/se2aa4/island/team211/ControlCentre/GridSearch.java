@@ -12,10 +12,9 @@ public class GridSearch implements DecisionMaker{
 
     public Drone drone;
 
-    private String lastTurn = "LEFT";
-
-    private boolean atEdge = false;
-    private boolean flyToGround = false;
+    private String lastTurn = "RIGHT";
+    private boolean turned = false;
+    private boolean flyToGround = false; //flag to see if the drone should be flying to a separate piece of land
     private Integer numberOfTurns = 0;
 
     public GridSearch(Drone drone){
@@ -38,42 +37,77 @@ public class GridSearch implements DecisionMaker{
         */
         switch (lastAction){
             case null: {
-                echoAhead(); //lastAction := echo
+                flyForward(); // lastAction := fly
             }
+
+
             case fly: {
                 scanPosition(); // lastAction := scan
             }
+
+
             case echo: {
                 if (foundGround()){flyToGround();} // lastAction := fly
-                else uTurn(); // lastAction := heading
+                else {
+                    if (turned){
+                        stop();
+                    } else {
+                        if (Objects.equals(lastTurn, "RIGHT")) { uTurnLeft();} // lastAction := heading
+                        else if (Objects.equals(lastTurn, "LEFT")) {uTurnRight();} // lastAction := heading
+                    }
+                }
             }
+
+
             case scan: {
                 if (overOcean()){
                     if (flyToGround){flyToGround();} // lastAction := fly
                     else echoAhead(); // lastAction := echo
                 } else {
-                    if (flyToGround){flyToGround = false;}
+                    flyToGround = false;
                     flyForward(); // lastAction := fly
                 }
             }
+
+
             case heading:{
-                if (numberOfTurns < 2){uTurn();} // lastAction := heading
-                else{
-                    numberOfTurns = 0;
-                    echoAhead(); // lastAction := echo
+                if (Objects.equals(lastTurn, "RIGHT")) {
+                    if (numberOfTurns < 2) {uTurnLeft(); // lastAction := heading
+                    } else {lastTurn = "LEFT";} //update direction after completing uTurn
                 }
+                else if (Objects.equals(lastTurn, "LEFT")) {
+                    if (numberOfTurns < 2) {uTurnRight(); // lastAction := heading
+                    } else {lastTurn = "RIGHT";}
+                }
+                numberOfTurns = 0;
+                turned = true;
+                echoAhead(); // lastAction := echo
             }
 
             default: {return null;}
         }
     }
 
-    private void uTurn() {
+
+
+
+
+    private void stop() {
+        lastAction = Action.stop;
+        sendDecision(lastAction);
+    }
+
+    private void uTurnRight() {
         lastAction = Action.heading;
         JSONObject parameter = new JSONObject();
-        if (Objects.equals(lastTurn, "RIGHT")) {
-            parameter.put("direction", drone.left);
-        } else {parameter.put("direction", drone.right);}
+        parameter.put("direction", drone.right);
+        numberOfTurns++;
+        sendDecision(lastAction, parameter);
+    }
+    private void uTurnLeft() {
+        lastAction = Action.heading;
+        JSONObject parameter = new JSONObject();
+        parameter.put("direction", drone.left);
         numberOfTurns++;
         sendDecision(lastAction, parameter);
     }
@@ -106,6 +140,9 @@ public class GridSearch implements DecisionMaker{
     public Action getLastAction() {
         return null;
     }
+
+
+
     @Override
     public JSONObject sendDecision(Action action, JSONObject parameters){
         JSONObject decision = new JSONObject();
