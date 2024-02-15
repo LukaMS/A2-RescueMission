@@ -11,9 +11,9 @@ import org.json.JSONObject;
 
 
 public class DataExtractor {
-    public void extract(JSONObject extraInfo, Drone drone, DecisionMaker islandFinder) {
+    public void extract(JSONObject extraInfo, Drone drone, DecisionMaker decisionMaker) {
         try {
-            switch (islandFinder.getLastAction()) {
+            switch (decisionMaker.getLastAction()) {
                 case echo, echoLeft, echoRight -> {
                     drone.radar.range = extraInfo.getInt("range");
                     drone.radar.found = extraInfo.getString("found");

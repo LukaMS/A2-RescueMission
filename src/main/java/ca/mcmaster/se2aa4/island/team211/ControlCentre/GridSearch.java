@@ -36,19 +36,14 @@ public class GridSearch implements DecisionMaker{
 
     @Override
     public JSONObject makeDecision() {
-
         switch (lastAction){
             case null: {
                 logger.info("Starting Grid Search");
-                return flyForward(); // lastAction := fly
+                return scanPosition(); // lastAction := scan
             }
-
-
             case fly: {
                 return scanPosition(); // lastAction := scan
             }
-
-
             case echo: {
                 if (foundGround()){
                     turned = false;
@@ -64,9 +59,6 @@ public class GridSearch implements DecisionMaker{
                     }
                 }
             }
-
-
-//not sending next decision here
             case scan: {
                 if (overOcean()){
                     if (flyToGround){return flyToGround();} // lastAction := fly
@@ -77,8 +69,6 @@ public class GridSearch implements DecisionMaker{
                 }
 
             }
-
-
             case heading:{
                 if (Objects.equals(lastTurn, "RIGHT")) {
                     if (numberOfTurns < 2) {return uTurnLeft(); // lastAction := heading
@@ -92,7 +82,6 @@ public class GridSearch implements DecisionMaker{
                 turned = true;
                 return echoAhead(); // lastAction := echo
             }
-
             default: {return null;}
         }
     }
@@ -117,6 +106,8 @@ public class GridSearch implements DecisionMaker{
         JSONObject parameter = new JSONObject();
         parameter.put("direction", drone.right);
         numberOfTurns++;
+
+        drone.droneActions.turnRight(drone); //update direction of drone
         return sendDecision(lastAction, parameter);
     }
     private JSONObject uTurnLeft() {
@@ -124,12 +115,13 @@ public class GridSearch implements DecisionMaker{
         JSONObject parameter = new JSONObject();
         parameter.put("direction", drone.left);
         numberOfTurns++;
+        drone.droneActions.turnLeft(drone); //update direction of drone
         return sendDecision(lastAction, parameter);
     }
 
-
     private JSONObject flyForward(){
         lastAction = Action.fly;
+        drone.droneActions.forward(drone); //update position of drone
         return sendDecision(lastAction);
     }
 
@@ -161,6 +153,6 @@ public class GridSearch implements DecisionMaker{
 
     @Override
     public Action getLastAction() {
-        return null;
+        return lastAction;
     }
 }

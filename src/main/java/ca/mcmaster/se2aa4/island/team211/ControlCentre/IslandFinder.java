@@ -91,6 +91,8 @@ public class IslandFinder implements DecisionMaker {
             case scan ->{
                 if (Objects.equals(drone.radar.found,"GROUND")) {
                     if (!overOcean()) {
+                        action = Action.fly;
+                        lastAction = action;
                         drone.decisionMaker = new GridSearch(drone);
                     } else {
                         action = Action.fly;
@@ -125,13 +127,8 @@ public class IslandFinder implements DecisionMaker {
         return decision;
     }
 
-    public Action getLastAction(){
-        return lastAction;
-    }
-
-    public boolean overOcean(){
-        return Objects.equals(drone.currentBiomes.get(0), "OCEAN");
-    }
+    public Action getLastAction(){return lastAction;}
+    public boolean overOcean(){return Objects.equals(drone.currentBiomes.get(0), "OCEAN");}
 
 
 
