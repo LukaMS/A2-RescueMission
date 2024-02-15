@@ -24,7 +24,7 @@ public class FindStart implements DecisionMaker{
                 lastAction = action;
                 return sendDecision(action, parameters);
             } else {
-                drone.setStart();
+                drone.droneActions.setStart(drone);
                 foundStart = true;
                 action = Action.scan;
                 lastAction = action;

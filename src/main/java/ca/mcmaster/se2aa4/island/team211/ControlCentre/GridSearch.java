@@ -1,6 +1,8 @@
 package ca.mcmaster.se2aa4.island.team211.ControlCentre;
 
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import java.util.Objects;
@@ -17,16 +19,11 @@ public class GridSearch implements DecisionMaker{
     private boolean flyToGround = false; //flag to see if the drone should be flying to a separate piece of land
     private Integer numberOfTurns = 0;
 
-    public GridSearch(Drone drone){
-        this.drone = drone;
-    }
-
-    @Override
-    public JSONObject makeDecision() {
-        /*2. while |Creeks| != 10
+    public GridSearch(Drone drone){this.drone = drone;}
+    /*1. while |Creeks| != 10
           2.    while not at edge of island do
-          3.        go stright across until reach ocean -> check if land in front
-          4.        if so -> travel to it -> travel straight until reach ocean -> repeat 3.
+          3.        go straight across until reach ocean -> check if land in front
+          4.        if so -> travel to it ->  repeat 3.
           5.        if no -> U-turn right if last turn was left, or vise verse -> go straight until reach ocean -> check for land ->
           6.            if so -> repeat 4.
           7.            if no -> U-turn left if last turn was right, or vise versa -> go straight until reach ocean -> check for land ->
@@ -35,53 +32,65 @@ public class GridSearch implements DecisionMaker{
           10. if last turn was right -> turn right again -> repeat from 3
           11. if last turn was left -> turn left again -> repeat from 3
         */
+    private final Logger logger = LogManager.getLogger();
+
+    @Override
+    public JSONObject makeDecision() {
+
         switch (lastAction){
             case null: {
-                flyForward(); // lastAction := fly
+                logger.info("Starting Grid Search");
+                return flyForward(); // lastAction := fly
             }
 
 
             case fly: {
-                scanPosition(); // lastAction := scan
+                return scanPosition(); // lastAction := scan
             }
 
 
             case echo: {
-                if (foundGround()){flyToGround();} // lastAction := fly
+                if (foundGround()){
+                    turned = false;
+                    return flyToGround();
+                } // lastAction := fly
                 else {
                     if (turned){
-                        stop();
+                        turned = false;
+                        return stop();
                     } else {
-                        if (Objects.equals(lastTurn, "RIGHT")) { uTurnLeft();} // lastAction := heading
-                        else if (Objects.equals(lastTurn, "LEFT")) {uTurnRight();} // lastAction := heading
+                        if (Objects.equals(lastTurn, "RIGHT")) {return uTurnLeft();} // lastAction := heading
+                        else if (Objects.equals(lastTurn, "LEFT")) {return uTurnRight();} // lastAction := heading
                     }
                 }
             }
 
 
+//not sending next decision here
             case scan: {
                 if (overOcean()){
-                    if (flyToGround){flyToGround();} // lastAction := fly
-                    else echoAhead(); // lastAction := echo
+                    if (flyToGround){return flyToGround();} // lastAction := fly
+                    else return echoAhead(); // lastAction := echo
                 } else {
                     flyToGround = false;
-                    flyForward(); // lastAction := fly
+                    return flyForward(); // lastAction := fly
                 }
+
             }
 
 
             case heading:{
                 if (Objects.equals(lastTurn, "RIGHT")) {
-                    if (numberOfTurns < 2) {uTurnLeft(); // lastAction := heading
+                    if (numberOfTurns < 2) {return uTurnLeft(); // lastAction := heading
                     } else {lastTurn = "LEFT";} //update direction after completing uTurn
                 }
                 else if (Objects.equals(lastTurn, "LEFT")) {
-                    if (numberOfTurns < 2) {uTurnRight(); // lastAction := heading
+                    if (numberOfTurns < 2) {return uTurnRight(); // lastAction := heading
                     } else {lastTurn = "RIGHT";}
                 }
                 numberOfTurns = 0;
                 turned = true;
-                echoAhead(); // lastAction := echo
+                return echoAhead(); // lastAction := echo
             }
 
             default: {return null;}
@@ -90,57 +99,51 @@ public class GridSearch implements DecisionMaker{
 
 
 
+    private boolean foundGround(){return Objects.equals(drone.radar.found, "GROUND");}
+    private boolean overOcean(){return Objects.equals(drone.currentBiomes.get(0), "OCEAN");}
 
-
-    private void stop() {
-        lastAction = Action.stop;
-        sendDecision(lastAction);
+    private JSONObject flyToGround() {
+        flyToGround = true;
+        return flyForward();
     }
 
-    private void uTurnRight() {
+    private JSONObject stop() {
+        lastAction = Action.stop;
+        return sendDecision(lastAction);
+    }
+
+    private JSONObject uTurnRight() {
         lastAction = Action.heading;
         JSONObject parameter = new JSONObject();
         parameter.put("direction", drone.right);
         numberOfTurns++;
-        sendDecision(lastAction, parameter);
+        return sendDecision(lastAction, parameter);
     }
-    private void uTurnLeft() {
+    private JSONObject uTurnLeft() {
         lastAction = Action.heading;
         JSONObject parameter = new JSONObject();
         parameter.put("direction", drone.left);
         numberOfTurns++;
-        sendDecision(lastAction, parameter);
+        return sendDecision(lastAction, parameter);
     }
 
-    private void flyToGround() {
-        flyToGround = true;
-        flyForward();
-    }
 
-    private boolean foundGround(){return Objects.equals(drone.radar.found, "GROUND");}
-    private boolean overOcean(){return Objects.equals(drone.currentBiomes.get(0), "OCEAN");}
-
-    private void flyForward(){
+    private JSONObject flyForward(){
         lastAction = Action.fly;
-        sendDecision(lastAction);
+        return sendDecision(lastAction);
     }
 
-    private void scanPosition(){
+    private JSONObject scanPosition(){
         lastAction = Action.scan;
-        sendDecision(lastAction);
+        return sendDecision(lastAction);
     }
 
-    private void echoAhead(){
+    private JSONObject echoAhead(){
         lastAction = Action.echo;
         JSONObject parameter = new JSONObject();
         parameter.put("direction", drone.direction);
-        sendDecision(lastAction, parameter);
+        return sendDecision(lastAction, parameter);
     }
-    @Override
-    public Action getLastAction() {
-        return null;
-    }
-
 
 
     @Override
@@ -154,5 +157,10 @@ public class GridSearch implements DecisionMaker{
         JSONObject decision = new JSONObject();
         decision.put("action", action);
         return decision;
+    }
+
+    @Override
+    public Action getLastAction() {
+        return null;
     }
 }

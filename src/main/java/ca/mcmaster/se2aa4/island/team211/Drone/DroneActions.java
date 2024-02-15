@@ -8,7 +8,7 @@ public class DroneActions {
 
 
     public JSONObject getDecision(Drone drone){
-        drone.getSides();
+        getSides(drone);
         return drone.decisionMaker.makeDecision();
     }
 
