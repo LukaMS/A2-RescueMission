@@ -3,8 +3,12 @@ package ca.mcmaster.se2aa4.island.team211.Drone;
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.DecisionMaker;
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.FindStart;
 import ca.mcmaster.se2aa4.island.team211.DataExtractor;
+import ca.mcmaster.se2aa4.island.team211.Locations.Coordinate;
+import ca.mcmaster.se2aa4.island.team211.Locations.Creek;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 
 public class Drone {
@@ -18,6 +22,10 @@ public class Drone {
     private final DataExtractor dataExtractor = new DataExtractor();
     public Integer x_cord;
     public Integer y_cord;
+    //Changed
+    //Put the hashmaps inside the drone class (we can switch this around but it works)
+    public HashMap<String, Coordinate> creeks = new HashMap<>();
+    public HashMap<String, Coordinate> emergSites = new HashMap<>();
 
     public DroneActions droneActions = new DroneActions();
 

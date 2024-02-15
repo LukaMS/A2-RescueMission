@@ -19,13 +19,25 @@ public class DataExtractor {
                     drone.radar.found = extraInfo.getString("found");
                 }
                 case scan -> {
+                    //Changed
+                    //Try and add a creek into the drones hashmap
+                    try {
+                        String creek = (String) extraInfo.getJSONArray("creeks").get(0);
+                        Coordinate creekCord = DroneActions.getCordinates(drone);
+                        drone.creeks.put(creek, creekCord);
+                    } catch (Exception e){
+                        ;
+                    }
+                    //try and add emergSite to drone hashmap
+                    try {
+                        String site = (String) extraInfo.getJSONArray("sites").get(0);
+                        Coordinate siteCord = DroneActions.getCordinates(drone);
+                        drone.emergSites.put(site, siteCord);
+                    } catch (Exception e){
+                        ;
+                    }
                     drone.currentBiomes = extraInfo.getJSONArray("biomes");
-                    Creek creek = (Creek) extraInfo.getJSONArray("creeks").get(0);
-                    Coordinate creekCord = DroneActions.getCordinates(drone);
-                    EmergSite site = (EmergSite) extraInfo.getJSONArray("sites").get(0);
-                    Coordinate siteCord = DroneActions.getCordinates(drone);
-                    Creek.creeks.put(creek, creekCord);
-                    EmergSite.sites.put(site, siteCord);
+
                 }
             }
         }catch (Exception e){
