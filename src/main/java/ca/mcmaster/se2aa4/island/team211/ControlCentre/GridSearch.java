@@ -34,6 +34,7 @@ public class GridSearch implements DecisionMaker{
         */
     private final Logger logger = LogManager.getLogger();
 
+    //Algorithm for searching the island
     @Override
     public JSONObject makeDecision() {
         switch (lastAction){
@@ -87,20 +88,17 @@ public class GridSearch implements DecisionMaker{
     }
 
 
-
     private boolean foundGround(){return Objects.equals(drone.radar.found, "GROUND");}
     private boolean overOcean(){return Objects.equals(drone.currentBiomes.get(0), "OCEAN");}
 
+    //If the flyToGround flag is true, it alternates between flying forward and scanning until reaching OCEAN
     private JSONObject flyToGround() {
         flyToGround = true;
         return flyForward();
     }
 
-    private JSONObject stop() {
-        lastAction = Action.stop;
-        return sendDecision(lastAction);
-    }
 
+    //Turns twice in the drone's right direction
     private JSONObject uTurnRight() {
         lastAction = Action.heading;
         JSONObject parameter = new JSONObject();
@@ -110,6 +108,8 @@ public class GridSearch implements DecisionMaker{
         drone.droneActions.turnRight(drone); //update direction of drone
         return sendDecision(lastAction, parameter);
     }
+
+    //Turns twice in the drone's left direction
     private JSONObject uTurnLeft() {
         lastAction = Action.heading;
         JSONObject parameter = new JSONObject();
@@ -137,6 +137,10 @@ public class GridSearch implements DecisionMaker{
         return sendDecision(lastAction, parameter);
     }
 
+    private JSONObject stop() {
+        lastAction = Action.stop;
+        return sendDecision(lastAction);
+    }
 
     @Override
     public JSONObject sendDecision(Action action, JSONObject parameters){
