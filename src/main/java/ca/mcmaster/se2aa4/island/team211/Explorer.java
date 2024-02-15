@@ -36,6 +36,8 @@ public class Explorer implements IExplorerRaid {
     public String takeDecision() {
         JSONObject decision;
         logger.info("** Current Location X: " + drone.droneActions.printCoords(drone)[0] + " Y: " + drone.droneActions.printCoords(drone)[1]);
+        logger.info("** Current Battery " + drone.battery.batteryLevel);
+
         try {
             decision = drone.droneActions.getDecision(drone);
             logger.info("** Decision: {}",decision.toString());

@@ -31,11 +31,6 @@ public class FindStart implements DecisionMaker{
                 return sendDecision(action);
             }
         }
-        if(lastAction == Action.fly){
-            action = Action.stop;
-            lastAction = action;
-            return sendDecision(action);
-        }
         return sendDecision(Action.stop);
     }
 
