@@ -4,6 +4,7 @@ import java.io.StringReader;
 
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.Action;
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
+import ca.mcmaster.se2aa4.island.team211.Locations.Creek;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,9 +36,11 @@ public class Explorer implements IExplorerRaid {
     @Override
     public String takeDecision() {
         JSONObject decision;
-        logger.info("** Current Location X: " + drone.printCoords()[0] + " Y: " + drone.printCoords()[1]);
+        logger.info("** Current Location X: " + drone.droneActions.printCoords(drone)[0] + " Y: " + drone.droneActions.printCoords(drone)[1]);
+        logger.info("** Current Battery " + drone.battery.batteryLevel);
+
         try {
-            decision = drone.getDecision();
+            decision = drone.droneActions.getDecision(drone);
             logger.info("** Decision: {}",decision.toString());
             return decision.toString();
         } catch (Exception e){
@@ -62,6 +65,10 @@ public class Explorer implements IExplorerRaid {
         drone.extractdata(extraInfo);
 
         logger.info("Additional information received: {}", extraInfo);
+
+        //Changed: Print out creeks and emergsites (ugly)
+        logger.info(drone.creeks.keySet()); //print set of keys
+        logger.info(drone.emergSites.keySet());
     }
 
     @Override

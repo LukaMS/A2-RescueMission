@@ -24,17 +24,12 @@ public class FindStart implements DecisionMaker{
                 lastAction = action;
                 return sendDecision(action, parameters);
             } else {
-                drone.setStart();
+                drone.droneActions.setStart(drone);
                 foundStart = true;
                 action = Action.scan;
                 lastAction = action;
                 return sendDecision(action);
             }
-        }
-        if(lastAction == Action.fly){
-            action = Action.stop;
-            lastAction = action;
-            return sendDecision(action);
         }
         return sendDecision(Action.stop);
     }
