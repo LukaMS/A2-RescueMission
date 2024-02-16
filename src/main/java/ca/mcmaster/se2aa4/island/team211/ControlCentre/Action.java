@@ -9,6 +9,8 @@ public enum Action {
     echo,
     echoLeft,
     echoRight,
-    scan;
+    scan,
+    uTurn,
+    reAlign;
     public static int cost;
 }
