@@ -67,8 +67,8 @@ public class Explorer implements IExplorerRaid {
         logger.info("Additional information received: {}", extraInfo);
 
         //Changed: Print out creeks and emergsites (ugly)
-        logger.info(drone.creeks);
-        logger.info(drone.emergSites);
+        logger.info(drone.creeks.keySet()); //print set of keys
+        logger.info(drone.emergSites.keySet());
     }
 
     @Override

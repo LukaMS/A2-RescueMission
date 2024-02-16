@@ -1,8 +1,6 @@
 package ca.mcmaster.se2aa4.island.team211.ControlCentre;
 
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import java.util.Objects;
@@ -14,13 +12,16 @@ public class GridSearch implements DecisionMaker{
 
     public Drone drone;
 
-    private String lastTurn = "RIGHT";
+    private String lastTurn;
     private boolean turned = false;
     private boolean flyToGround = false; //flag to see if the drone should be flying to a separate piece of land
     private Integer numberOfTurns = 0;
 
-    public GridSearch(Drone drone){this.drone = drone;}
-    /*1. while |Creeks| != 10
+    public GridSearch(Drone drone, String lastTurn){
+        this.drone = drone;
+        this.lastTurn = lastTurn;
+    }
+    /*1. while |Sites| != 1
           2.    while not at edge of island do
           3.        go straight across until reach ocean -> check if land in front
           4.        if so -> travel to it ->  repeat 3.
@@ -32,14 +33,17 @@ public class GridSearch implements DecisionMaker{
           10. if last turn was right -> turn right again -> repeat from 3
           11. if last turn was left -> turn left again -> repeat from 3
         */
-    private final Logger logger = LogManager.getLogger();
 
     //Algorithm for searching the island
+
+    //breaking at left edge of island sometimes
     @Override
     public JSONObject makeDecision() {
+        if (drone.emergSites.size() == 1) return stop(); //stop once 1 creek have been found
+        if (drone.battery.batteryLevel < 100) return stop();
+
         switch (lastAction){
             case null: {
-                logger.info("Starting Grid Search");
                 return scanPosition(); // lastAction := scan
             }
             case fly: {
@@ -48,15 +52,24 @@ public class GridSearch implements DecisionMaker{
             case echo: {
                 if (foundGround()){
                     turned = false;
-                    return flyToGround();
-                } // lastAction := fly
+                    return flyToGround(); // lastAction := fly
+                }
                 else {
                     if (turned){
                         turned = false;
-                        return stop();
+                        if (Objects.equals(lastTurn, "RIGHT")){
+                            numberOfTurns = 1;
+                            return uTurnRight(); // lastAction := heading
+                        }else if (Objects.equals(lastTurn, "LEFT")) {
+                            numberOfTurns = 1;
+                            return uTurnLeft();} // lastAction := heading
                     } else {
                         if (Objects.equals(lastTurn, "RIGHT")) {return uTurnLeft();} // lastAction := heading
                         else if (Objects.equals(lastTurn, "LEFT")) {return uTurnRight();} // lastAction := heading
+                        else {
+                            lastTurn = "LEFT";
+                            return uTurnRight();
+                        }
                     }
                 }
             }
@@ -71,6 +84,7 @@ public class GridSearch implements DecisionMaker{
 
             }
             case heading:{
+
                 if (Objects.equals(lastTurn, "RIGHT")) {
                     if (numberOfTurns < 2) {return uTurnLeft(); // lastAction := heading
                     } else {lastTurn = "LEFT";} //update direction after completing uTurn
@@ -80,7 +94,6 @@ public class GridSearch implements DecisionMaker{
                     } else {lastTurn = "RIGHT";}
                 }
                 numberOfTurns = 0;
-                turned = true;
                 return echoAhead(); // lastAction := echo
             }
             default: {return null;}
@@ -104,8 +117,9 @@ public class GridSearch implements DecisionMaker{
         JSONObject parameter = new JSONObject();
         parameter.put("direction", drone.right);
         numberOfTurns++;
-
+        turned = true;
         drone.droneActions.turnRight(drone); //update direction of drone
+        if (numberOfTurns >= 2) lastTurn = "RIGHT";
         return sendDecision(lastAction, parameter);
     }
 
@@ -115,6 +129,8 @@ public class GridSearch implements DecisionMaker{
         JSONObject parameter = new JSONObject();
         parameter.put("direction", drone.left);
         numberOfTurns++;
+        turned = true;
+        if (numberOfTurns >= 2) lastTurn = "LEFT";
         drone.droneActions.turnLeft(drone); //update direction of drone
         return sendDecision(lastAction, parameter);
     }

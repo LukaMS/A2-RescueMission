@@ -8,8 +8,14 @@ public class DroneActions {
 
 
     public JSONObject getDecision(Drone drone){
-        getSides(drone);
-        return drone.decisionMaker.makeDecision();
+        try {
+            getSides(drone);
+            return drone.decisionMaker.makeDecision();
+        }catch(Exception e){
+            e.printStackTrace();
+            return drone.decisionMaker.makeDecision();
+
+        }
     }
 
     public static Coordinate getCordinates(Drone drone) {

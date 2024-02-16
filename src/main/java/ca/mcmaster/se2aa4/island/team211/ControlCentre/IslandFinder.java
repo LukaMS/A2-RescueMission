@@ -9,11 +9,10 @@ public class IslandFinder implements DecisionMaker {
     private final Drone drone;
     public static Action lastAction;
     public JSONObject lastDecision;
+    public String lastTurn;
     public static Action action = null;
 
-    public IslandFinder(Drone drone){
-        this.drone = drone;
-    }
+    public IslandFinder(Drone drone){this.drone = drone;}
 
     @Override
     public JSONObject makeDecision() {
@@ -57,6 +56,7 @@ public class IslandFinder implements DecisionMaker {
                     JSONObject parameter = new JSONObject();
                     parameter.put("direction", drone.left);
                     lastAction = Action.heading;
+                    lastTurn = "LEFT";
                     drone.droneActions.turnLeft(drone);
                     return sendDecision(action,parameter);
                 }else{
@@ -73,6 +73,7 @@ public class IslandFinder implements DecisionMaker {
                     JSONObject parameter = new JSONObject();
                     parameter.put("direction", drone.right);
                     lastAction = Action.heading;
+                    lastTurn = "RIGHT";
                     drone.droneActions.turnRight(drone);
                     return sendDecision(action, parameter);
                 } else{
@@ -93,7 +94,7 @@ public class IslandFinder implements DecisionMaker {
                     if (!overOcean()) {
                         action = Action.fly;
                         lastAction = action;
-                        drone.decisionMaker = new GridSearch(drone);
+                        drone.decisionMaker = new GridSearch(drone,lastTurn);
                     } else {
                         action = Action.fly;
                         lastAction = Action.flyToGround;
