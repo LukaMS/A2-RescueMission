@@ -41,8 +41,8 @@ public class IslandFinder implements DecisionMaker {
                     if (overOcean()) {
                         return flyToGround(); // lastAction := fly
                     } else {
-                        return stop();
-                        //drone.decisionMaker = new GridSearch(drone);
+                        drone.decisionMaker = new GridSearch(drone);
+                        return echoDirection(drone.left);
                     }
                 }
             }
@@ -103,11 +103,6 @@ public class IslandFinder implements DecisionMaker {
         parameter.put("direction", direction);
         lastEchoDirection = direction;
         return sendDecision(lastAction, parameter);
-    }
-
-    private JSONObject stop() {
-        lastAction = Action.stop;
-        return sendDecision(lastAction);
     }
 
     public JSONObject sendDecision(Action action, JSONObject parameters){
