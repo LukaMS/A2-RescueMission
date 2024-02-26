@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 public class Drone {
     public String direction;
+    public String initialDirection;
     public String left,right;
     public JSONArray currentBiomes = null;
     public final Battery battery = new Battery();
@@ -31,6 +32,7 @@ public class Drone {
 
     public void initialize(JSONObject info) {
         direction = info.getString("heading");
+        initialDirection = direction;
         battery.batteryLevel = info.getInt("budget");
         decisionMaker = new FindStart(this);
     }
