@@ -4,7 +4,6 @@ import java.io.StringReader;
 
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.Action;
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
-import ca.mcmaster.se2aa4.island.team211.Locations.Creek;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
