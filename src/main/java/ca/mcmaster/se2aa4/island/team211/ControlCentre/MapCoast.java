@@ -39,6 +39,7 @@ public class MapCoast implements DecisionMaker{
             drone.decisionMaker = new GridSearch(drone);
             return scanPosition();
         }
+        if (drone.battery.batteryLevel < 100) return stop();
         switch (lastAction){
             case null -> {
                 return echoRight();
@@ -113,6 +114,10 @@ public class MapCoast implements DecisionMaker{
                 return turnRight();
             }
         }
+    }
+    private JSONObject stop() {
+        lastAction = Action.stop;
+        return sendDecision(lastAction);
     }
 
     //Turns in the drone's right direction
