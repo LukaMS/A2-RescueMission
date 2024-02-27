@@ -35,7 +35,7 @@ public class GridSearch implements DecisionMaker{
 
     @Override
     public JSONObject makeDecision() {
-        if (drone.emergSites.size() == 1 && drone.creeks.size() == 10) return stop(); //stop once 1 creek have been found
+        if (drone.emergSites.size() == 1 && drone.creeks.size() == 7) return stop(); //stop once 1 creek have been found
         if (drone.battery.batteryLevel < 100) return stop();
 
         switch (lastAction){
@@ -199,7 +199,14 @@ public class GridSearch implements DecisionMaker{
     }
 
     private boolean foundGround(){return Objects.equals(drone.radar.found, "GROUND");}
-    private boolean overOcean(){return Objects.equals(drone.currentBiomes.get(0), "OCEAN");}
+    private boolean overOcean(){
+        for (int i = 0; i < drone.currentBiomes.length(); i++) {
+            if (!drone.currentBiomes.get(i).equals("OCEAN")) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     @Override
     public JSONObject sendDecision(Action action, JSONObject parameters){
