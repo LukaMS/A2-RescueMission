@@ -5,6 +5,8 @@ public enum Action {
     stop,
     heading,
     echo,
-    scan;
+    scan,
+    uTurn,
+    reAlign;
     public static int cost;
 }

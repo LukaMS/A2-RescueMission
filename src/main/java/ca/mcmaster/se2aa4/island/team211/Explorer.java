@@ -3,13 +3,7 @@ package ca.mcmaster.se2aa4.island.team211;
 import java.io.StringReader;
 
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.Action;
-import ca.mcmaster.se2aa4.island.team211.ControlCentre.DecisionMaker;
-import ca.mcmaster.se2aa4.island.team211.ControlCentre.IslandFinder;
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
-import ca.mcmaster.se2aa4.island.team211.Locations.Creek;
-import ca.mcmaster.se2aa4.island.team211.Locations.EmergSite;
-import eu.ace_design.island.game.Plane;
-import eu.ace_design.island.game.Plane$;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,8 +14,6 @@ import org.json.JSONTokener;
 public class Explorer implements IExplorerRaid {
 
     private final Logger logger = LogManager.getLogger();
-
-    private final DecisionMaker decisionMaker = new IslandFinder();
 
     private Drone drone;
 
@@ -35,20 +27,25 @@ public class Explorer implements IExplorerRaid {
         this.drone = new Drone();
         drone.initialize(info);
 
-        logger.info("The drone is facing {}", Drone.direction);
+        logger.info("The drone is facing {}", drone.direction);
         logger.info("Battery level is {}", drone.battery.batteryLevel);
 
     }
 
     @Override
     public String takeDecision() {
+        JSONObject decision;
+        logger.info("** Current Location X: " + drone.droneActions.printCoords(drone)[0] + " Y: " + drone.droneActions.printCoords(drone)[1]);
+        logger.info("** Current Battery " + drone.battery.batteryLevel);
 
-        JSONObject decision = new JSONObject();
-        Object action = decisionMaker.makeDecision(drone);
-
-        decision.put("action", action);
-        logger.info("** Decision: {}",decision.toString());
-        return decision.toString();
+        try {
+            decision = drone.droneActions.getDecision(drone);
+            logger.info("** Decision: {}",decision.toString());
+            return decision.toString();
+        } catch (Exception e){
+            logger.error(e.toString());
+        }
+        return null;
     }
 
     @Override
@@ -67,8 +64,11 @@ public class Explorer implements IExplorerRaid {
         drone.extractdata(extraInfo);
 
         logger.info("Additional information received: {}", extraInfo);
-    }
 
+        //Changed: Print out creeks and emergsites (ugly)
+        logger.info(drone.creeks.keySet()); //print set of keys
+        logger.info(drone.emergSites.keySet());
+    }
 
     @Override
     public String deliverFinalReport() {
