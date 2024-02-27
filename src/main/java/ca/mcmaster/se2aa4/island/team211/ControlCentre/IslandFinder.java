@@ -41,7 +41,7 @@ public class IslandFinder implements DecisionMaker {
                     if (overOcean()) {
                         return flyToGround(); // lastAction := fly
                     } else {
-                        drone.decisionMaker = new MapCoast(drone);
+                        drone.decisionMaker = new GridSearch(drone);
                         return scanPosition();
                     }
                 }
