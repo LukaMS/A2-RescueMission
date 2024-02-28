@@ -1,9 +1,11 @@
 package ca.mcmaster.se2aa4.island.team211;
 
 import java.io.StringReader;
+import java.util.Map;
 
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.Action;
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
+import ca.mcmaster.se2aa4.island.team211.Locations.Coordinate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -65,14 +67,22 @@ public class Explorer implements IExplorerRaid {
 
         logger.info("Additional information received: {}", extraInfo);
 
-        //Changed: Print out creeks and emergsites (ugly)
-        logger.info(drone.creeks.keySet()); //print set of keys
-        logger.info(drone.emergSites.keySet());
+        //print set of keys with Coordinates
+        for (Map.Entry<String, Coordinate> entry: drone.creeks.entrySet()) {
+            logger.info("Creek " + entry.getKey() + " x = " + entry.getValue().x_cord + " y = " + entry.getValue().y_cord);
+        }
+        for (Map.Entry<String, Coordinate> entry: drone.emergSites.entrySet()) {
+            logger.info("Site " + entry.getKey() + " x = " + entry.getValue().x_cord + " y = " + entry.getValue().y_cord);
+        }
     }
 
     @Override
     public String deliverFinalReport() {
-        return "no creek found";
+        DistanceCalculator distanceCalculator = new DistanceCalculator(drone);
+        Map.Entry<String,Coordinate> entry = drone.emergSites.entrySet().iterator().next();
+        distanceCalculator.calculateDistances(entry.getValue().x_cord,entry.getValue().y_cord);
+        distanceCalculator.displayDistances(logger);
+        return distanceCalculator.determineClosest();
     }
 
 }
