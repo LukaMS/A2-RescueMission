@@ -14,7 +14,7 @@ public class GridSearch implements DecisionMaker{
     private String turnDirection; //The current turn being made
     private boolean flyToGround = false; //flag to see if the drone should be flying to a separate piece of land
     private Integer turnCount = 0; //used for determining how many more turns need to be made
-
+    private Integer testCount = 0;
     public GridSearch(Drone drone){
         this.drone = drone;
     }
@@ -35,6 +35,10 @@ public class GridSearch implements DecisionMaker{
 
     @Override
     public JSONObject makeDecision() {
+        testCount++;
+        if(testCount > 100) {
+            return stop();
+        }
         if (drone.emergSites.size() == 1 && drone.creeks.size() == 7) return stop(); //stop once 1 creek have been found
         if (drone.battery.batteryLevel < 100) return stop();
 
@@ -81,7 +85,7 @@ public class GridSearch implements DecisionMaker{
                 return reAlign();
             }
             case uTurn:{
-                if (turnCount < 2) {
+                if (turnCount < 5) {
                     return uTurn(); //lastAction := uTurn
                 } else {
                     turnCount = 0;
@@ -91,11 +95,47 @@ public class GridSearch implements DecisionMaker{
             default: {return null;}
         }
     }
-
+    /*
+    Weird U-Turn to make it go row by row instead of being offset by one
+        1. If last turn was right and turn count is 0 then turn right
+        2. If turn count is 1 and do opposite of last turn
+        3. If turn count is 2 then do same turn
+        4. if turn count is 3 fly forward
+        5. if turn count is 5 then turn same again.
+     */
     //flips the drones direction
     private JSONObject uTurn(){
         lastAction = Action.uTurn;
         turned = true;
+        switch (turnCount){
+            case 0 -> {
+                turnCount++;
+                if (Objects.equals(turnDirection, "LEFT")) {
+                    lastTurn = "RIGHT";
+                    return turnRight();
+                } else {
+                    lastTurn = "LEFT";
+                    return turnLeft();
+                }
+            }
+            case 1, 2, 4 -> {
+                turnCount++;
+                if (Objects.equals(turnDirection, "LEFT")) {
+                    lastTurn = "LEFT";
+                    return turnLeft();
+                } else {
+                    lastTurn = "RIGHT";
+                    return turnRight();
+                }
+            }
+            case 3 -> {
+                turnCount++;
+                return flyForward();
+            }
+        }
+
+
+
         turnCount++;
         if (Objects.equals(turnDirection, "LEFT")){
             lastTurn = "LEFT";
