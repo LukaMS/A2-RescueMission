@@ -35,11 +35,15 @@ public class GridSearch implements DecisionMaker{
 
     @Override
     public JSONObject makeDecision() {
+        /*
         testCount++;
         if(testCount > 1000) {
             return stop();
         }
-        if (drone.emergSites.size() == 1 && drone.creeks.size() == 7) return stop(); //stop once 1 creek have been found
+
+         */
+
+        if (drone.emergSites.size() == 1 && drone.creeks.size() == 9) return stop(); //stop once 1 creek have been found
         if (drone.battery.batteryLevel < 100) return stop();
         if(drone.y_cord == 0) return stop();
 
@@ -66,7 +70,11 @@ public class GridSearch implements DecisionMaker{
                             turnDirection = "LEFT";
                         }
                         turnCount = 0;
-                        return uTurn();
+                        if (drone.radar.range > 2) {
+                            return uTurn();
+                        } else {
+                            return uTurn2();
+                        }
                     }
                 }
             }
@@ -91,6 +99,14 @@ public class GridSearch implements DecisionMaker{
                     return echoAhead(); // lastAction := echo
                 }
             }
+            case uTurn2:{
+                if (turnCount < 6) {
+                    return uTurn2(); //lastAction := uTurn
+                } else {
+                    turnCount = 0;
+                    return echoAhead(); // lastAction := echo
+                }
+            }
             default: {return null;}
         }
     }
@@ -103,6 +119,7 @@ public class GridSearch implements DecisionMaker{
         5. if turn count is 5 then turn same again.
      */
     //flips the drones direction
+
     private JSONObject uTurn(){
         lastAction = Action.uTurn;
         turned = true;
@@ -132,6 +149,37 @@ public class GridSearch implements DecisionMaker{
             case 3, 5 -> {
                 turnCount++;
                 return flyForward();
+            }
+        }
+        return null;
+    }
+
+    private JSONObject uTurn2(){
+        lastAction = Action.uTurn2;
+        turned = true;
+        switch (turnCount){
+            case 0, 1, 2, 4 -> {
+                turnCount++;
+                if (Objects.equals(turnDirection, "LEFT")) {
+                    lastTurn = "LEFT";
+                    return turnLeft();
+                } else {
+                    lastTurn = "RIGHT";
+                    return turnRight();
+                }
+            }
+            case 3 -> {
+                turnCount++;
+                if (Objects.equals(lastTurn, "LEFT")) {
+                    turnDirection = "RIGHT";
+                } else {
+                    turnDirection = "LEFT";
+                }
+                return flyForward();
+            }
+            case 5 -> {
+                turnCount++;
+                return scanPosition();
             }
         }
         return null;
@@ -189,7 +237,7 @@ public class GridSearch implements DecisionMaker{
 
     //Turns in the drone's right direction
     private JSONObject turnRight() {
-        if (!(Objects.equals(lastAction,Action.uTurn) || (Objects.equals(lastAction,Action.reAlign)))){lastAction = Action.heading;}
+        if (shouldChangeLastAction()){lastAction = Action.heading;}
         JSONObject parameter = new JSONObject();
         parameter.put("direction", drone.right);
         drone.droneActions.turnRight(drone); //update direction of drone
@@ -198,7 +246,7 @@ public class GridSearch implements DecisionMaker{
 
     //Turns in the drone's left direction
     private JSONObject turnLeft() {
-        if (!(Objects.equals(lastAction,Action.uTurn) || (Objects.equals(lastAction,Action.reAlign)))){lastAction = Action.heading;}
+        if (shouldChangeLastAction()){lastAction = Action.heading;}
         JSONObject parameter = new JSONObject();
         parameter.put("direction", drone.left);
         drone.droneActions.turnLeft(drone); //update direction of drone
@@ -207,14 +255,18 @@ public class GridSearch implements DecisionMaker{
 
 
     private JSONObject flyForward(){
-        if (!Objects.equals(lastAction,Action.uTurn) && !Objects.equals(lastAction,Action.reAlign)){lastAction = Action.fly;}
+        if (shouldChangeLastAction()){lastAction = Action.fly;}
         drone.droneActions.forward(drone); //update position of drone
         return sendDecision(Action.fly);
     }
 
     private JSONObject scanPosition(){
-        if (!Objects.equals(lastAction,Action.reAlign)){lastAction = Action.scan;}
+        if (shouldChangeLastAction()){lastAction = Action.scan;}
         return sendDecision(Action.scan);
+    }
+
+    private boolean shouldChangeLastAction(){
+        return (!(Objects.equals(lastAction,Action.uTurn) || Objects.equals(lastAction,Action.reAlign) || Objects.equals(lastAction,Action.uTurn2)));
     }
 
     private JSONObject echoAhead(){
