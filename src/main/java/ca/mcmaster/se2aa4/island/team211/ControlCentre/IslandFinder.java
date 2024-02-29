@@ -17,7 +17,7 @@ public class IslandFinder implements DecisionMaker {
     public JSONObject makeDecision() {
         switch(lastAction){
             case null: {
-                return echoDirection(drone.direction);
+                return echoDirection(drone.right);
             }
             case echo: {
                 if (foundGround()){

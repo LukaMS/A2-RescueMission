@@ -36,19 +36,18 @@ public class GridSearch implements DecisionMaker{
     @Override
     public JSONObject makeDecision() {
         testCount++;
-        if(testCount > 100) {
+        if(testCount > 1000) {
             return stop();
         }
         if (drone.emergSites.size() == 1 && drone.creeks.size() == 7) return stop(); //stop once 1 creek have been found
         if (drone.battery.batteryLevel < 100) return stop();
+        if(drone.y_cord == 0) return stop();
 
         switch (lastAction){
-            case null: {
-                return goInward(); // lastAction := heading
-            }
+            case null:
             case fly, heading: {
-                return scanPosition(); // lastAction := scan
-            }
+                return scanPosition(); // lastAction := heading
+            }// lastAction := scan
             case echo: {
                 //if found ground fly to it
                 if (foundGround()){
@@ -61,10 +60,10 @@ public class GridSearch implements DecisionMaker{
                         return reAlign(); // shifts position
                     } else { // if didn't find ground, and didn't just turn, then turn
                         if (Objects.equals(lastTurn, "RIGHT")) {
-                            turnDirection = "LEFT";
+                            turnDirection = "RIGHT";
                         } // lastAction := heading
                         else{
-                            turnDirection = "RIGHT";
+                            turnDirection = "LEFT";
                         }
                         turnCount = 0;
                         return uTurn();
@@ -85,7 +84,7 @@ public class GridSearch implements DecisionMaker{
                 return reAlign();
             }
             case uTurn:{
-                if (turnCount < 5) {
+                if (turnCount < 6) {
                     return uTurn(); //lastAction := uTurn
                 } else {
                     turnCount = 0;
@@ -111,11 +110,13 @@ public class GridSearch implements DecisionMaker{
             case 0 -> {
                 turnCount++;
                 if (Objects.equals(turnDirection, "LEFT")) {
-                    lastTurn = "RIGHT";
-                    return turnRight();
-                } else {
                     lastTurn = "LEFT";
+                    turnDirection = "RIGHT";
                     return turnLeft();
+                } else {
+                    lastTurn = "RIGHT";
+                    turnDirection = "LEFT";
+                    return turnRight();
                 }
             }
             case 1, 2, 4 -> {
@@ -128,22 +129,12 @@ public class GridSearch implements DecisionMaker{
                     return turnRight();
                 }
             }
-            case 3 -> {
+            case 3, 5 -> {
                 turnCount++;
                 return flyForward();
             }
         }
-
-
-
-        turnCount++;
-        if (Objects.equals(turnDirection, "LEFT")){
-            lastTurn = "LEFT";
-            return turnLeft();
-        } else {
-            lastTurn = "RIGHT";
-            return turnRight();
-        }
+        return null;
     }
 
     private JSONObject reAlign() {
@@ -216,7 +207,7 @@ public class GridSearch implements DecisionMaker{
 
 
     private JSONObject flyForward(){
-        if (!Objects.equals(lastAction,Action.reAlign)){lastAction = Action.fly;}
+        if (!Objects.equals(lastAction,Action.uTurn) && !Objects.equals(lastAction,Action.reAlign)){lastAction = Action.fly;}
         drone.droneActions.forward(drone); //update position of drone
         return sendDecision(Action.fly);
     }
