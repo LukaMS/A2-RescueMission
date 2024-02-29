@@ -36,12 +36,8 @@ public class GridSearch implements DecisionMaker{
 
     @Override
     public JSONObject makeDecision() {
-        if (drone.emergSites.size() == 1 && drone.creeks.size() == 3)//stop once 3 creeks have been found
-        {
-
-            return stop();
-        }
-        if (drone.battery.batteryLevel < 100) return stop();
+        if (drone.emergSites.size() == 1 && drone.creeks.size() >= 0) return stop();
+        else if (drone.battery.batteryLevel < 1000) return stop();
 
         switch (lastAction){
             case null: {

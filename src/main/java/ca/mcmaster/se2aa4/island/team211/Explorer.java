@@ -78,11 +78,17 @@ public class Explorer implements IExplorerRaid {
 
     @Override
     public String deliverFinalReport() {
+        logger.info("Final Report: ");
         DistanceCalculator distanceCalculator = new DistanceCalculator(drone);
-        Map.Entry<String,Coordinate> entry = drone.emergSites.entrySet().iterator().next();
-        distanceCalculator.calculateDistances(entry.getValue().x_cord,entry.getValue().y_cord);
-        distanceCalculator.displayDistances(logger);
-        return distanceCalculator.determineClosest();
+        distanceCalculator.calculateDistances();
+        for (Map.Entry<String,Float> entry2: distanceCalculator.getDistances().entrySet()) {
+            logger.info("Creek: " + entry2.getKey() + " Distance to Site: " + entry2.getValue());
+        }
+        String closestCreek =  distanceCalculator.determineClosest();
+        logger.info("Closest Creek to Emergency Site: " + closestCreek);
+
+        return closestCreek;
     }
+
 
 }
