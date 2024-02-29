@@ -1,6 +1,7 @@
 package ca.mcmaster.se2aa4.island.team211.ControlCentre;
 
 import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
+import ca.mcmaster.se2aa4.island.team211.Explorer;
 import org.json.JSONObject;
 
 import java.util.Objects;
@@ -35,8 +36,8 @@ public class GridSearch implements DecisionMaker{
 
     @Override
     public JSONObject makeDecision() {
-        if (drone.emergSites.size() == 1 && drone.creeks.size() == 7) return stop(); //stop once 1 creek have been found
-        if (drone.battery.batteryLevel < 100) return stop();
+        if (drone.emergSites.size() == 1 && drone.creeks.size() >= 0) return stop();
+        else if (drone.battery.batteryLevel < 1000) return stop();
         if (drone.y_cord == 0) return stop();
 
         switch (lastAction){
