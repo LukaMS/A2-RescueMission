@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class DistanceCalculator {
     private final Drone drone;
-    private final HashMap<String, Float> distances = new HashMap<>();
+    private final Map<String, Float> distances = new HashMap<>();
 
     private final Logger logger = LogManager.getLogger();
 
@@ -18,7 +18,7 @@ public class DistanceCalculator {
         this.drone = drone;
     }
 
-    public HashMap<String, Float> getDistances(){
+    public Map<String, Float> getDistances(){
         return distances;
     }
 

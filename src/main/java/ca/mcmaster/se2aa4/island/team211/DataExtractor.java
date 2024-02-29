@@ -15,6 +15,7 @@ public class DataExtractor {
                 case echo : {
                     drone.radar.range = extraInfo.getInt("range");
                     drone.radar.found = extraInfo.getString("found");
+                    break;
                 }
                 case scan: {
                     //Changed
@@ -31,8 +32,9 @@ public class DataExtractor {
                         drone.emergSites.put(site, siteCord);
                     } catch (Exception ignored){ }
                     drone.currentBiomes = extraInfo.getJSONArray("biomes");
-
+                    break;
                 }
+                default:
             }
         }catch (Exception e){
             e.printStackTrace();
