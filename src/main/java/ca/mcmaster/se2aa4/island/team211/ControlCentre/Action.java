@@ -6,7 +6,7 @@ public enum Action {
     heading,
     echo,
     scan,
-    uTurn,
+    uTurn, uTurn2,
     reAlign;
     public static int cost;
 }
