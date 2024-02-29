@@ -4,7 +4,6 @@ import ca.mcmaster.se2aa4.island.team211.ControlCentre.DecisionMaker;
 import ca.mcmaster.se2aa4.island.team211.ControlCentre.FindStart;
 import ca.mcmaster.se2aa4.island.team211.DataExtractor;
 import ca.mcmaster.se2aa4.island.team211.Locations.Coordinate;
-import ca.mcmaster.se2aa4.island.team211.Locations.Creek;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

@@ -47,6 +47,7 @@ public class GridSearch implements DecisionMaker{
         if (drone.battery.batteryLevel < 100) return stop();
         if(drone.y_cord == 0) return stop();
 
+
         switch (lastAction){
             case null:
             case fly, heading: {
