@@ -14,7 +14,6 @@ public class GridSearch implements DecisionMaker{
     private String turnDirection; //The current turn being made
     private boolean flyToGround = false; //flag to see if the drone should be flying to a separate piece of land
     private Integer turnCount = 0; //used for determining how many more turns need to be made
-    private Integer testCount = 0;
     public GridSearch(Drone drone){
         this.drone = drone;
     }
@@ -35,13 +34,6 @@ public class GridSearch implements DecisionMaker{
 
     @Override
     public JSONObject makeDecision() {
-        /*
-        testCount++;
-        if(testCount > 1000) {
-            return stop();
-        }
-
-         */
 
         if (drone.emergSites.size() == 1 && drone.creeks.size() == 9) return stop(); //stop once 1 creek have been found
         if (drone.battery.batteryLevel < 100) return stop();
