@@ -14,8 +14,9 @@ public class GridSearch implements DecisionMaker{
     private String turnDirection; //The current turn being made
     private boolean flyToGround = false; //flag to see if the drone should be flying to a separate piece of land
     private Integer turnCount = 0; //used for determining how many more turns need to be made
-    public GridSearch(Drone drone){
+    public GridSearch(Drone drone, String lastTurn){
         this.drone = drone;
+        this.lastTurn = lastTurn;
     }
     /*1. while |Sites| != 1
           2.    while not at edge of island do
@@ -35,8 +36,8 @@ public class GridSearch implements DecisionMaker{
     @Override
     public JSONObject makeDecision() {
 
-        if (drone.emergSites.size() == 1 && drone.creeks.size() == 9) return stop(); //stop once 1 creek have been found
-        if (drone.battery.batteryLevel < 100) return stop();
+        if (drone.emergSites.size() == 1 && drone.creeks.size() >= 8) return stop(); //stop once 1 creek have been found
+        if (drone.battery.batteryLevel < 10000) return stop();
         if(drone.y_cord == 0) return stop();
 
 
@@ -50,7 +51,7 @@ public class GridSearch implements DecisionMaker{
                 if (foundGround()){
                     turned = false;
                     return flyToGround(); // lastAction := fly
-                } //if didn't find ground, but just turned, then turn 1 more time and go forward
+                } //if didn't find ground, but just turned, then reAlign position
                 else {
                     if (turned){
                         turned = false;
@@ -63,10 +64,10 @@ public class GridSearch implements DecisionMaker{
                             turnDirection = "LEFT";
                         }
                         turnCount = 0;
-                        if (drone.radar.range > 2) {
-                            return uTurn();
-                        } else {
+                        if (drone.radar.range <= 2 && Objects.equals(drone.radar.found,"OUT_OF_RANGE")){
                             return uTurn2();
+                        } else {
+                            return uTurn();
                         }
                     }
                 }
