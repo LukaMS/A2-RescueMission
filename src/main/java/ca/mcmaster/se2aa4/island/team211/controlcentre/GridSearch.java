@@ -1,6 +1,6 @@
-package ca.mcmaster.se2aa4.island.team211.ControlCentre;
+package ca.mcmaster.se2aa4.island.team211.controlcentre;
 
-import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
+import ca.mcmaster.se2aa4.island.team211.drone.Drone;
 import org.json.JSONObject;
 
 import java.util.Objects;
@@ -36,9 +36,16 @@ public class GridSearch implements DecisionMaker{
     @Override
     public JSONObject makeDecision() {
 
-        if (drone.emergSites.size() == 1 && drone.creeks.size() >= 8) return stop(); //stop once 1 creek have been found
-        if (drone.battery.batteryLevel < 10000) return stop();
-        if(drone.y_cord == 0) return stop();
+        //stop conditions
+        if (drone.emergSites.size() == 1 && drone.creeks.size() >= 8) {
+            return stop(); //stop once 1 creek have been found
+        }
+        if (drone.battery.batteryLevel < 10000) {
+            return stop();
+        }
+        if(drone.y_cord == 0) {
+            return stop();
+        }
 
 
         switch (lastAction){
@@ -144,8 +151,8 @@ public class GridSearch implements DecisionMaker{
                 turnCount++;
                 return flyForward();
             }
+            default -> {return null;}
         }
-        return null;
     }
 
     private JSONObject uTurn2(){
@@ -175,8 +182,8 @@ public class GridSearch implements DecisionMaker{
                 turnCount++;
                 return scanPosition();
             }
+            default -> {return null;}
         }
-        return null;
     }
 
     private JSONObject reAlign() {
@@ -209,19 +216,6 @@ public class GridSearch implements DecisionMaker{
             return echoAhead();
         }
     }
-
-    //at the end of IslandFinder it echo's to the left of the drone,
-    // this is how it determines which direction to go at the start of GridSearch
-    private JSONObject goInward() {
-        if (foundGround()){
-            lastTurn = "LEFT";
-            return turnLeft();
-        } else{
-            lastTurn = "RIGHT";
-            return turnRight();
-        }
-    }
-
 
     //If the flyToGround flag is true, it alternates between flying forward and scanning until reaching OCEAN
     private JSONObject flyToGround() {

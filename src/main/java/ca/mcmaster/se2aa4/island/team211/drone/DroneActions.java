@@ -1,7 +1,7 @@
-package ca.mcmaster.se2aa4.island.team211.Drone;
+package ca.mcmaster.se2aa4.island.team211.drone;
 
-import ca.mcmaster.se2aa4.island.team211.ControlCentre.IslandFinder;
-import ca.mcmaster.se2aa4.island.team211.Locations.Coordinate;
+import ca.mcmaster.se2aa4.island.team211.controlcentre.IslandFinder;
+import ca.mcmaster.se2aa4.island.team211.locations.Coordinate;
 import org.json.JSONObject;
 
 public class DroneActions {

@@ -1,4 +1,4 @@
-package ca.mcmaster.se2aa4.island.team211.Locations;
+package ca.mcmaster.se2aa4.island.team211.locations;
 
 public class Coordinate {
     public Object x_cord;

@@ -1,6 +1,6 @@
-package ca.mcmaster.se2aa4.island.team211.ControlCentre;
+package ca.mcmaster.se2aa4.island.team211.controlcentre;
 
-import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
+import ca.mcmaster.se2aa4.island.team211.drone.Drone;
 import org.json.JSONObject;
 
 public class FindStart implements DecisionMaker{

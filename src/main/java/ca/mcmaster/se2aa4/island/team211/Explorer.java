@@ -3,9 +3,9 @@ package ca.mcmaster.se2aa4.island.team211;
 import java.io.StringReader;
 import java.util.Map;
 
-import ca.mcmaster.se2aa4.island.team211.ControlCentre.Action;
-import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
-import ca.mcmaster.se2aa4.island.team211.Locations.Coordinate;
+import ca.mcmaster.se2aa4.island.team211.controlcentre.Action;
+import ca.mcmaster.se2aa4.island.team211.drone.Drone;
+import ca.mcmaster.se2aa4.island.team211.locations.Coordinate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

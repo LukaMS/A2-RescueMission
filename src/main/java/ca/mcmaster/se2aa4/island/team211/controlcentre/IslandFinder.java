@@ -1,6 +1,6 @@
-package ca.mcmaster.se2aa4.island.team211.ControlCentre;
+package ca.mcmaster.se2aa4.island.team211.controlcentre;
 
-import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
+import ca.mcmaster.se2aa4.island.team211.drone.Drone;
 import org.json.JSONObject;
 
 import java.util.Objects;
@@ -129,7 +129,7 @@ public class IslandFinder implements DecisionMaker {
 
     //Turns in the drone's right direction
     private JSONObject turnRight() {
-        if (shouldChangeLastAction()) lastAction = Action.heading;
+        if (shouldChangeLastAction()){lastAction = Action.heading;}
         JSONObject parameter = new JSONObject();
         parameter.put("direction", drone.right);
         drone.droneActions.turnRight(drone); //update direction of drone
@@ -138,7 +138,7 @@ public class IslandFinder implements DecisionMaker {
 
     //Turns in the drone's left direction
     private JSONObject turnLeft() {
-        if (shouldChangeLastAction()) lastAction = Action.heading;
+        if (shouldChangeLastAction()){lastAction = Action.heading;}
         JSONObject parameter = new JSONObject();
         parameter.put("direction", drone.left);
         drone.droneActions.turnLeft(drone); //update direction of drone
@@ -146,13 +146,13 @@ public class IslandFinder implements DecisionMaker {
     }
 
     private JSONObject flyForward(){
-        if (shouldChangeLastAction()) lastAction = Action.fly;
+        if (shouldChangeLastAction()){lastAction = Action.fly;}
         drone.droneActions.forward(drone); //update position of drone
         return sendDecision(Action.fly);
     }
 
     private JSONObject scanPosition(){
-        if (shouldChangeLastAction())lastAction = Action.scan;
+        if (shouldChangeLastAction()){lastAction = Action.scan;}
         return sendDecision(Action.scan);
     }
 

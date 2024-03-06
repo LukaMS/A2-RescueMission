@@ -1,9 +1,9 @@
 package ca.mcmaster.se2aa4.island.team211;
 
-import ca.mcmaster.se2aa4.island.team211.ControlCentre.DecisionMaker;
-import ca.mcmaster.se2aa4.island.team211.Drone.Drone;
-import ca.mcmaster.se2aa4.island.team211.Drone.DroneActions;
-import ca.mcmaster.se2aa4.island.team211.Locations.Coordinate;
+import ca.mcmaster.se2aa4.island.team211.controlcentre.DecisionMaker;
+import ca.mcmaster.se2aa4.island.team211.drone.Drone;
+import ca.mcmaster.se2aa4.island.team211.drone.DroneActions;
+import ca.mcmaster.se2aa4.island.team211.locations.Coordinate;
 import org.json.JSONObject;
 
 
