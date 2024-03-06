@@ -54,6 +54,7 @@ public class IslandFinder implements DecisionMaker {
                         return scanPosition();
                     }
                 }
+                return null;
             }
             case heading: {
                 return flyToGround();
@@ -114,6 +115,7 @@ public class IslandFinder implements DecisionMaker {
                 turnCount++;
                 return scanPosition();
             }
+            default -> {}
         }
         return null;
     }
@@ -157,7 +159,7 @@ public class IslandFinder implements DecisionMaker {
     }
 
     private boolean shouldChangeLastAction(){
-        return (!(Objects.equals(lastAction,Action.uTurn) || Objects.equals(lastAction,Action.reAlign) || Objects.equals(lastAction,Action.uTurn2)));
+        return !(Objects.equals(lastAction,Action.uTurn) || Objects.equals(lastAction,Action.reAlign) || Objects.equals(lastAction,Action.uTurn2));
     }
 
     private JSONObject echoDirection(String direction){

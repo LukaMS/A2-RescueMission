@@ -49,7 +49,7 @@ public class Explorer implements IExplorerRaid {
             if (logger.isInfoEnabled()) {logger.info("** Decision: {}",decision.toString());}
             return decision.toString();
         } catch (Exception e){
-            if (logger.isInfoEnabled()) {logger.error(e.toString());}
+            if (logger.isErrorEnabled()) {logger.error(e.toString());}
         }
         return null;
     }

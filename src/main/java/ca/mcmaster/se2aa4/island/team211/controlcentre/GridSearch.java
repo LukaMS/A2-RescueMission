@@ -82,7 +82,7 @@ public class GridSearch implements DecisionMaker{
             case scan: {
                 if (overOcean()){
                     if (flyToGround){return flyToGround();} // lastAction := fly
-                    else return echoAhead(); // lastAction := echo
+                    else {return echoAhead();} // lastAction := echo
                 } else {
                     flyToGround = false;
                     return flyForward(); // lastAction := fly
@@ -254,7 +254,7 @@ public class GridSearch implements DecisionMaker{
     }
 
     private boolean shouldChangeLastAction(){
-        return (!(Objects.equals(lastAction,Action.uTurn) || Objects.equals(lastAction,Action.reAlign) || Objects.equals(lastAction,Action.uTurn2)));
+        return !(Objects.equals(lastAction,Action.uTurn) || Objects.equals(lastAction,Action.reAlign) || Objects.equals(lastAction,Action.uTurn2));
     }
 
     private JSONObject echoAhead(){
@@ -272,7 +272,7 @@ public class GridSearch implements DecisionMaker{
     private boolean foundGround(){return Objects.equals(drone.radar.found, "GROUND");}
     private boolean overOcean(){
         for (int i = 0; i < drone.currentBiomes.length(); i++) {
-            if (!drone.currentBiomes.get(i).equals("OCEAN")) {
+            if (!"OCEAN".equals(drone.currentBiomes.get(i))) {
                 return false;
             }
         }

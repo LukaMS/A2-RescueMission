@@ -62,6 +62,7 @@ public class FindStart implements DecisionMaker{
             case "E", "W":
                 params.put("direction", "N");
                 break;
+            default:
         }
         return params;
     }
