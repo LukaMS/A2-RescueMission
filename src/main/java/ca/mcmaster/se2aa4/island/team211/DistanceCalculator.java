@@ -34,14 +34,14 @@ public class DistanceCalculator {
 
     public void calculateDistances() {
         logger.info("Calculating Distances");
-        Map.Entry<String,Coordinate> entry = drone.emergSites.entrySet().iterator().next(); //extract site x and y coord.
-        int siteX = (int) entry.getValue().x_cord;
-        int siteY = (int) entry.getValue().y_cord;
+        Map.Entry<String,Coordinate> entry = drone.emergencySites.entrySet().iterator().next(); //extract site x and y coord.
+        int siteX = (int) entry.getValue().xCoordinate;
+        int siteY = (int) entry.getValue().yCoordinate;
 
         for (Map.Entry<String,Coordinate> entry2: drone.creeks.entrySet()) {
             String creek = entry2.getKey();
-            int creekX = (int) entry2.getValue().x_cord;
-            int creekY = (int) entry2.getValue().y_cord;
+            int creekX = (int) entry2.getValue().xCoordinate;
+            int creekY = (int) entry2.getValue().yCoordinate;
 
             Float distance = (float) Math.sqrt(Math.pow(creekX-siteX, 2) + Math.pow(creekY-siteY, 2) );
             distances.put(creek,distance);

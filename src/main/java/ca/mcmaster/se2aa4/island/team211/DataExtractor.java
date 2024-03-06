@@ -29,7 +29,7 @@ public class DataExtractor {
                     try {
                         String site = (String) extraInfo.getJSONArray("sites").get(0);
                         Coordinate siteCord = DroneActions.getCordinates(drone);
-                        drone.emergSites.put(site, siteCord);
+                        drone.emergencySites.put(site, siteCord);
                     } catch (Exception ignored){ }
                     drone.currentBiomes = extraInfo.getJSONArray("biomes");
                     break;

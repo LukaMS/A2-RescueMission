@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class Drone {
@@ -25,8 +26,8 @@ public class Drone {
     public Integer y_cord;
     //Changed
     //Put the hashmaps inside the drone class (we can switch this around, but it works)
-    public HashMap<String, Coordinate> creeks = new HashMap<>();
-    public HashMap<String, Coordinate> emergSites = new HashMap<>();
+    public Map<String, Coordinate> creeks = new HashMap<>();
+    public Map<String, Coordinate> emergencySites = new HashMap<>();
 
     public DroneActions droneActions = new DroneActions();
 

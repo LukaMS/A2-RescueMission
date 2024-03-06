@@ -1,6 +1,6 @@
 package ca.mcmaster.se2aa4.island.team211.locations;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class Creek {
 
@@ -10,6 +10,6 @@ public class Creek {
         this.id = id;
     }
 
-    public static HashMap<Creek, Coordinate> creeks;
+    public static Map<Creek, Coordinate> creeks;
 
 }
