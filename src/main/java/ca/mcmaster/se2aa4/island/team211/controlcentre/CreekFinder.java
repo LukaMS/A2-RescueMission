@@ -6,50 +6,55 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
-public class GridSearch implements DecisionMaker{
-
+public class CreekFinder implements DecisionMaker {
     public Drone drone;
-    public Action lastAction = null;
+    public Action lastAction = Action.fly;
+    DistanceCalculator distanceCalculator;
+    public float minRadius;
+    private float droneDistanceToSite;
     private boolean turned = false; //indicates whether a turn was just made or not
     private String lastTurn; //Used to determine next turn
     private String turnDirection; //The current turn being made
     private boolean flyToGround = false; //flag to see if the drone should be flying to a separate piece of land
     private Integer turnCount = 0; //used for determining how many more turns need to be made
-    public GridSearch(Drone drone, String lastTurn){
+    private boolean outOfRadiusPermanent = false;
+
+    public CreekFinder(Drone drone) {
         this.drone = drone;
-        this.lastTurn = lastTurn;
+        initialize();
     }
 
-    /*1. while |Sites| != 1
-          2.    while not at edge of island do
-          3.        go straight across until reach ocean -> check if land in front
-          4.        if so -> travel to it ->  repeat 3.
-          5.        if no -> U-turn right if last turn was left, or vise verse -> go straight until reach ocean -> check for land ->
-          6.            if so -> repeat 4.
-          7.            if no -> U-turn left if last turn was right, or vise versa -> go straight until reach ocean -> check for land ->
-          8.                if so -> repeat 4
-          9.                if no -> repeat from 5
-          10. if last turn was right -> turn right again -> repeat from 3
-          11. if last turn was left -> turn left again -> repeat from 3
-        */
+    public void initialize(){
+        distanceCalculator = new DistanceCalculator(drone);
+        distanceCalculator.calculateDistances();
+        setMinRadius();
+        setDroneDistanceToSite();
+    }
 
-    //Algorithm for searching the island
+    private void setMinRadius(){
+        distanceCalculator.calculateDistances();
+        String closestCreek = distanceCalculator.determineClosest();
+        minRadius = distanceCalculator.getDistances().get(closestCreek);
+    }
+
+    private void setDroneDistanceToSite(){droneDistanceToSite = distanceCalculator.distanceToSite(drone); }
+
+    private boolean outOfRange(){return droneDistanceToSite > minRadius; }
 
     @Override
     public JSONObject makeDecision() {
+        setDroneDistanceToSite();
 
         //stop conditions
-        if (!drone.emergencySites.isEmpty()) {
-            drone.decisionMaker = new CreekFinder(drone);
-            return flyForward();
-        }
-        if (drone.battery.batteryLevel < 1000 || drone.y_cord == 0) {return stop();}
-
+        if (outOfRadiusPermanent || drone.battery.batteryLevel < 1000 || drone.y_cord == 0) {return stop();}
 
         switch (lastAction){
             case null:
-            case fly, heading: {return scanPosition();}// lastAction := scan
+            case fly, heading: {
+                return scanPosition(); // lastAction := heading
+            }// lastAction := scan
             case echo: {
+                if(outOfRange()){outOfRadiusPermanent = true;}
                 //if found ground fly to it
                 if (foundGround()){
                     turned = false;
@@ -67,15 +72,22 @@ public class GridSearch implements DecisionMaker{
                             turnDirection = "LEFT";
                         }
                         turnCount = 0;
-                        if (drone.radar.range <= 3 && Objects.equals(drone.radar.found,"OUT_OF_RANGE")){
-                            return uTurn2();
-                        } else {
+                        if (drone.radar.range > 3 && Objects.equals(drone.radar.found,"OUT_OF_RANGE")){
                             return uTurn();
+                        } else {
+                            return uTurn2();
                         }
                     }
                 }
             }
             case scan: {
+                if (outOfRange()){ //if the drone is out of min range, then turn around
+                    if (Objects.equals(lastTurn, "RIGHT")) {turnDirection = "RIGHT";}
+                    else{turnDirection = "LEFT";}
+                    turnCount = 0;
+                    return uTurn();
+                }
+
                 if (overOcean()){
                     if (flyToGround){return flyToGround();} // lastAction := fly
                     else {return echoAhead();} // lastAction := echo
@@ -116,7 +128,6 @@ public class GridSearch implements DecisionMaker{
         5. if turn count is 5 then turn same again.
      */
 
-    //flips the drones direction
     private JSONObject uTurn(){
         lastAction = Action.uTurn;
         turned = true;
@@ -274,6 +285,10 @@ public class GridSearch implements DecisionMaker{
         }
         return true;
     }
+    @Override
+    public Action getLastAction() {
+        return lastAction;
+    }
 
     @Override
     public JSONObject sendDecision(Action action, JSONObject parameters){
@@ -287,10 +302,5 @@ public class GridSearch implements DecisionMaker{
         JSONObject decision = new JSONObject();
         decision.put("action", action);
         return decision;
-    }
-
-    @Override
-    public Action getLastAction() {
-        return lastAction;
     }
 }
