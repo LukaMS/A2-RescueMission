@@ -37,10 +37,10 @@ public class GridSearch implements DecisionMaker{
     public JSONObject makeDecision() {
 
         //stop conditions
-        if (drone.emergencySites.size() == 1 && drone.creeks.size() >= 8) {
+        if (drone.emergencySites.size() == 1 && drone.creeks.size() >= 9) {
             return stop(); //stop once 1 creek have been found
         }
-        if (drone.battery.batteryLevel < 10000) {
+        if (drone.battery.batteryLevel < 1000) {
             return stop();
         }
         if(drone.y_cord == 0) {
@@ -71,7 +71,7 @@ public class GridSearch implements DecisionMaker{
                             turnDirection = "LEFT";
                         }
                         turnCount = 0;
-                        if (drone.radar.range <= 2 && Objects.equals(drone.radar.found,"OUT_OF_RANGE")){
+                        if (drone.radar.range <= 3 && Objects.equals(drone.radar.found,"OUT_OF_RANGE")){
                             return uTurn2();
                         } else {
                             return uTurn();
