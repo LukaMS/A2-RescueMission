@@ -1,7 +1,7 @@
-package ca.mcmaster.se2aa4.island.team211.Drone;
+package ca.mcmaster.se2aa4.island.team211.drone;
 
-import ca.mcmaster.se2aa4.island.team211.ControlCentre.IslandFinder;
-import ca.mcmaster.se2aa4.island.team211.Locations.Coordinate;
+import ca.mcmaster.se2aa4.island.team211.controlcentre.IslandFinder;
+import ca.mcmaster.se2aa4.island.team211.locations.Coordinate;
 import org.json.JSONObject;
 
 public class DroneActions {
@@ -29,7 +29,7 @@ public class DroneActions {
             case "S": {drone.left = "E";drone.right = "W"; break;}
             case "E": {drone.left = "N";drone.right = "S"; break;}
             case "W": {drone.left = "S";drone.right = "N"; break;}
-
+            default:
         }
     }
 
@@ -43,6 +43,7 @@ public class DroneActions {
                 drone.y_cord = drone.radar.range+1;
                 drone.x_cord = 1;
                 break;
+            default:
         }
         drone.decisionMaker = new IslandFinder(drone);
     }
@@ -75,6 +76,7 @@ public class DroneActions {
                 drone.y_cord += 1;
                 drone.direction = "S";
             }
+            default -> {}
         }
     }
 
@@ -100,6 +102,7 @@ public class DroneActions {
                 drone.y_cord -= 1;
                 drone.direction = "N";
             }
+            default -> {}
         }
     }
 
@@ -109,6 +112,7 @@ public class DroneActions {
             case "E" -> drone.x_cord++;
             case "S" -> drone.y_cord++;
             case "W" -> drone.x_cord--;
+            default -> {}
         }
     }
 }
