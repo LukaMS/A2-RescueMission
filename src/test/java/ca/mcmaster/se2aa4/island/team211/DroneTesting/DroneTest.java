@@ -1,9 +1,15 @@
 package ca.mcmaster.se2aa4.island.team211.DroneTesting;
 
+import ca.mcmaster.se2aa4.island.team211.controlcentre.FindStart;
 import ca.mcmaster.se2aa4.island.team211.drone.Drone;
+import ca.mcmaster.se2aa4.island.team211.drone.DroneActions;
+import ca.mcmaster.se2aa4.island.team211.drone.Radar;
+import ca.mcmaster.se2aa4.island.team211.locations.Coordinate;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.notification.RunListener;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,6 +25,16 @@ public class DroneTest {
         this.drone.initialDirection = drone.direction;
         this.drone.x_cord = 0;
         this.drone.y_cord = 0;
+        this.drone.decisionMaker = new FindStart(drone);
+    }
+
+    void setUpRadar(Drone drone, boolean setFound){
+        if(setFound){
+            this.drone.radar.found = true;
+            this.drone.radar.range = 10;
+        } else {
+            this.drone.radar.found = false;
+        }
     }
 
     @Test
@@ -190,5 +206,50 @@ public class DroneTest {
         assertEquals(2, coords.length);
         assertEquals(Integer.valueOf(5), coords[0]);
         assertEquals(Integer.valueOf(10), coords[1]);
+    }
+
+    @Test
+    void testSetStartNorthSouth(){
+        setUpDrone("N");
+        setUpRadar(drone, true);
+
+        drone.droneActions.setStart(drone);
+        int expected_X = drone.radar.range + 1;
+        assertEquals(expected_X, drone.x_cord);
+        assertEquals(1, drone.y_cord);
+    }
+
+    @Test
+    void testSetStartEastWest(){
+        setUpDrone("E");
+        setUpRadar(drone, true);
+
+        drone.droneActions.setStart(drone);
+        int expected_Y = drone.radar.range + 1;
+        assertEquals(1, drone.x_cord);
+        assertEquals(expected_Y, drone.y_cord);
+    }
+
+    @Test
+    void testGetCoordinates(){
+        setUpDrone("N");
+
+        Coordinate coords = DroneActions.getCordinates(drone);
+
+        assertEquals(coords.xCoordinate, drone.x_cord);
+        assertEquals(coords.yCoordinate, drone.y_cord);
+    }
+    
+    @Test
+    void testGetDecision(){
+        setUpDrone("N");
+
+        JSONObject expectedDecision = new JSONObject();
+        JSONObject parameters = new JSONObject();
+        parameters.put("direction", "W");
+        expectedDecision.put("action", "echo").put("parameters", parameters);
+        
+        JSONObject decision = drone.droneActions.getDecision(drone);
+        assertEquals(expectedDecision.toString(), decision.toString());
     }
 }
