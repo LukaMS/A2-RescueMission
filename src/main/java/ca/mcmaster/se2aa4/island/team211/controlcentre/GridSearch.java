@@ -40,7 +40,7 @@ public class GridSearch implements DecisionMaker{
 
         //stop conditions
         if (!drone.emergencySites.isEmpty()) {
-            drone.decisionMaker = new CreekFinder(drone);
+            drone.decisionMaker = new CreekFinder(drone, lastTurn);
             return flyForward();
         }
         if (drone.battery.batteryLevel < 1000 || drone.y_cord == 0) {return stop();}

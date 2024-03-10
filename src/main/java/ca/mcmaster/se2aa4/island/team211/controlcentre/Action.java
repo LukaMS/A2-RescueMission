@@ -7,6 +7,6 @@ public enum Action {
     echo,
     scan,
     uTurn, uTurn2,
-    reAlign;
+    reAlign, returnToRadius;
     public static int cost;
 }

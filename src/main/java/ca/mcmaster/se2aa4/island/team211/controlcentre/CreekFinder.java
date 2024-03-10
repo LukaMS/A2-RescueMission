@@ -24,9 +24,11 @@ public class CreekFinder implements DecisionMaker {
     private Integer turnCount = 0; //used for determining how many more turns need to be made
     private boolean outOfRadiusPermanent = false;
     private int creekSize;
+    private int flyCount = 0;
 
-    public CreekFinder(Drone drone) {
+    public CreekFinder(Drone drone, String lastTurn) {
         this.drone = drone;
+        this.lastTurn = lastTurn;
         initialize();
     }
 
@@ -60,7 +62,7 @@ public class CreekFinder implements DecisionMaker {
 
 
         //stop conditions
-        if (outOfRadiusPermanent || drone.battery.batteryLevel < 1000 || drone.y_cord == 0) {return stop();}
+        if (outOfRadiusPermanent || drone.battery.batteryLevel < 1000 || drone.y_cord == 0 || drone.x_cord == 0) {return stop();}
 
         switch (lastAction){
             case null:
@@ -115,11 +117,11 @@ public class CreekFinder implements DecisionMaker {
                 return reAlign();
             }
             case uTurn:{
-                if (turnCount < 12) {
+                if (turnCount < 6) {
                     return uTurn(); //lastAction := uTurn
                 } else {
                     turnCount = 0;
-                    return echoAhead(); // lastAction := echo
+                    return returnToRadius(); // lastAction := echo
                 }
             }
             case uTurn2:{
@@ -129,6 +131,13 @@ public class CreekFinder implements DecisionMaker {
                     turnCount = 0;
                     return echoAhead(); // lastAction := echo
                 }
+            }
+            case returnToRadius:{
+                if (outOfRange()){
+                    return returnToRadius();
+                }
+                flyCount = 0;
+                return echoAhead();
             }
             default: {return null;}
         }
@@ -168,16 +177,19 @@ public class CreekFinder implements DecisionMaker {
                     return turnRight();
                 }
             }
-            case 3, 5, 6, 8, 10 -> {
+            case 3, 5 -> {
                 turnCount++;
                 return flyForward();
             }
-            case 7,9,11 ->{
-                turnCount++;
-                return scanPosition();
-            }
             default -> {return null;}
         }
+    }
+
+    private JSONObject returnToRadius(){
+        if (flyCount > 10){return stop();}
+        lastAction = Action.returnToRadius;
+        flyCount++;
+        return flyForward();
     }
 
     private JSONObject uTurn2(){
@@ -279,7 +291,7 @@ public class CreekFinder implements DecisionMaker {
     }
 
     private boolean shouldChangeLastAction(){
-        return !(Objects.equals(lastAction,Action.uTurn) || Objects.equals(lastAction,Action.reAlign) || Objects.equals(lastAction,Action.uTurn2));
+        return !(Objects.equals(lastAction,Action.uTurn) || Objects.equals(lastAction,Action.reAlign) || Objects.equals(lastAction,Action.uTurn2) || Objects.equals(lastAction,Action.returnToRadius));
     }
 
     private JSONObject echoAhead(){
