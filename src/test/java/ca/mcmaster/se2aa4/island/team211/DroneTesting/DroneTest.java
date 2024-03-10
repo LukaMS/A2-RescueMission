@@ -1,9 +1,11 @@
 package ca.mcmaster.se2aa4.island.team211.DroneTesting;
 
 import ca.mcmaster.se2aa4.island.team211.drone.Drone;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -11,7 +13,7 @@ public class DroneTest {
 
     private Drone drone;
 
-    void setUp(String direction){
+    void setUpDrone(String direction){
         drone = new Drone();
         this.drone.direction = direction;
         this.drone.initialDirection = drone.direction;
@@ -21,7 +23,7 @@ public class DroneTest {
 
     @Test
     void testTurnRightEast() {
-        setUp("E");
+        setUpDrone("E");
         drone.droneActions.turnRight(drone);
 
         assertEquals(1, drone.x_cord);
@@ -31,7 +33,7 @@ public class DroneTest {
 
     @Test
     void testTurnRightWest() {
-        setUp("W");
+        setUpDrone("W");
         drone.droneActions.turnRight(drone);
 
         assertEquals(-1, drone.x_cord);
@@ -41,7 +43,7 @@ public class DroneTest {
 
     @Test
     void testTurnRightNorth() {
-        setUp("N");
+        setUpDrone("N");
         drone.droneActions.turnRight(drone);
 
         assertEquals(1, drone.x_cord);
@@ -51,7 +53,7 @@ public class DroneTest {
 
     @Test
     void testTurnRightSouth() {
-        setUp("S");
+        setUpDrone("S");
         drone.droneActions.turnRight(drone);
 
         assertEquals(-1, drone.x_cord);
@@ -61,7 +63,7 @@ public class DroneTest {
 
     @Test
     void testTurnLeftEast() {
-        setUp("E");
+        setUpDrone("E");
         drone.droneActions.turnLeft(drone);
 
         assertEquals(1, drone.x_cord);
@@ -71,7 +73,7 @@ public class DroneTest {
 
     @Test
     void testTurnLeftWest() {
-        setUp("W");
+        setUpDrone("W");
         drone.droneActions.turnLeft(drone);
 
         assertEquals(-1, drone.x_cord);
@@ -81,7 +83,7 @@ public class DroneTest {
 
     @Test
     void testTurnLeftNorth() {
-        setUp("N");
+        setUpDrone("N");
         drone.droneActions.turnLeft(drone);
 
         assertEquals(-1, drone.x_cord);
@@ -91,7 +93,7 @@ public class DroneTest {
 
     @Test
     void testTurnLeftSouth() {
-        setUp("S");
+        setUpDrone("S");
         drone.droneActions.turnLeft(drone);
 
         assertEquals(1, drone.x_cord);
@@ -101,7 +103,7 @@ public class DroneTest {
 
     @Test
     void testForwardNorth(){
-        setUp("N");
+        setUpDrone("N");
         drone.droneActions.forward(drone);
 
         assertEquals(0, drone.x_cord);
@@ -111,7 +113,7 @@ public class DroneTest {
 
     @Test
     void testForwardSouth(){
-        setUp("S");
+        setUpDrone("S");
         drone.droneActions.forward(drone);
 
         assertEquals(0, drone.x_cord);
@@ -121,7 +123,7 @@ public class DroneTest {
 
     @Test
     void testForwardEast(){
-        setUp("E");
+        setUpDrone("E");
         drone.droneActions.forward(drone);
 
         assertEquals(1, drone.x_cord);
@@ -131,11 +133,62 @@ public class DroneTest {
 
     @Test
     void testForwardWest(){
-        setUp("W");
+        setUpDrone("W");
         drone.droneActions.forward(drone);
 
         assertEquals(-1, drone.x_cord);
         assertEquals(0, drone.y_cord);
         assertEquals("W", drone.direction);
+    }
+
+    @Test
+    void testGetSidesNorth(){
+        setUpDrone("N");
+        drone.droneActions.getSides(drone);
+
+        assertEquals("W", drone.left);
+        assertEquals("E", drone.right);
+    }
+
+    @Test
+    void testGetSidesEast(){
+        setUpDrone("E");
+        drone.droneActions.getSides(drone);
+
+        assertEquals("N", drone.left);
+        assertEquals("S", drone.right);
+    }
+
+    @Test
+    void testGetSidesSouth(){
+        setUpDrone("S");
+        drone.droneActions.getSides(drone);
+
+        assertEquals("E", drone.left);
+        assertEquals("W", drone.right);
+    }
+
+    @Test
+    void testGetSidesWest(){
+        setUpDrone("W");
+        drone.droneActions.getSides(drone);
+
+        assertEquals("S", drone.left);
+        assertEquals("N", drone.right);
+    }
+
+
+    @Test
+    void testPrintCoords(){
+        setUpDrone("N");
+        drone.x_cord = 5;
+        drone.y_cord = 10;
+
+        Integer[] coords = drone.droneActions.printCoords(drone);
+
+        Assertions.assertNotNull(coords);
+        assertEquals(2, coords.length);
+        assertEquals(Integer.valueOf(5), coords[0]);
+        assertEquals(Integer.valueOf(10), coords[1]);
     }
 }
