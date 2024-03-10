@@ -12,6 +12,8 @@ public class DistanceCalculator {
     private final Drone drone;
     private final Map<String, Float> distances = new HashMap<>();
     private final Logger logger = LogManager.getLogger();
+    private int siteX;
+    private int siteY;
     public DistanceCalculator(Drone drone) {
         this.drone = drone;
     }
@@ -34,9 +36,7 @@ public class DistanceCalculator {
 
     public void calculateDistances() {
         logger.info("Calculating Distances");
-        Map.Entry<String,Coordinate> entry = drone.emergencySites.entrySet().iterator().next(); //extract site x and y coord.
-        int siteX = (int) entry.getValue().xCoordinate;
-        int siteY = (int) entry.getValue().yCoordinate;
+        setSiteXY();
 
         for (Map.Entry<String,Coordinate> entry2: drone.creeks.entrySet()) {
             String creek = entry2.getKey();
@@ -46,5 +46,15 @@ public class DistanceCalculator {
             Float distance = (float) Math.sqrt(Math.pow(creekX-siteX, 2) + Math.pow(creekY-siteY, 2) );
             distances.put(creek,distance);
         }
+    }
+
+    private void setSiteXY(){
+        Map.Entry<String,Coordinate> entry = drone.emergencySites.entrySet().iterator().next(); //extract site x and y coord.
+        siteX = (int) entry.getValue().xCoordinate;
+        siteY = (int) entry.getValue().yCoordinate;
+    }
+
+    public float distanceToSite(Drone drone1){
+        return (float) Math.sqrt(Math.pow(drone1.x_cord-siteX, 2) + Math.pow(drone1.y_cord-siteY, 2) );
     }
 }
