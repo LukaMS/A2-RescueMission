@@ -2,11 +2,16 @@ package ca.mcmaster.se2aa4.island.team211.controlcentre;
 
 import ca.mcmaster.se2aa4.island.team211.DistanceCalculator;
 import ca.mcmaster.se2aa4.island.team211.drone.Drone;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import java.util.Objects;
 
 public class CreekFinder implements DecisionMaker {
+
+    private final Logger logger = LogManager.getLogger();
+
     public Drone drone;
     public Action lastAction = Action.fly;
     DistanceCalculator distanceCalculator;
@@ -18,6 +23,7 @@ public class CreekFinder implements DecisionMaker {
     private boolean flyToGround = false; //flag to see if the drone should be flying to a separate piece of land
     private Integer turnCount = 0; //used for determining how many more turns need to be made
     private boolean outOfRadiusPermanent = false;
+    private int creekSize;
 
     public CreekFinder(Drone drone) {
         this.drone = drone;
@@ -27,6 +33,7 @@ public class CreekFinder implements DecisionMaker {
     public void initialize(){
         distanceCalculator = new DistanceCalculator(drone);
         distanceCalculator.calculateDistances();
+        creekSize = drone.creeks.size();
         setMinRadius();
         setDroneDistanceToSite();
     }
@@ -39,11 +46,18 @@ public class CreekFinder implements DecisionMaker {
 
     private void setDroneDistanceToSite(){droneDistanceToSite = distanceCalculator.distanceToSite(drone); }
 
-    private boolean outOfRange(){return droneDistanceToSite > minRadius; }
+    private boolean outOfRange(){return  droneDistanceToSite > minRadius; }
 
     @Override
     public JSONObject makeDecision() {
         setDroneDistanceToSite();
+        logger.info("Drone to Site: " + droneDistanceToSite);
+        logger.info("Closest Creek: " + minRadius);
+        if (drone.creeks.size() > creekSize){
+            creekSize = drone.creeks.size();
+            setMinRadius();
+        }
+
 
         //stop conditions
         if (outOfRadiusPermanent || drone.battery.batteryLevel < 1000 || drone.y_cord == 0) {return stop();}
@@ -101,7 +115,7 @@ public class CreekFinder implements DecisionMaker {
                 return reAlign();
             }
             case uTurn:{
-                if (turnCount < 6) {
+                if (turnCount < 12) {
                     return uTurn(); //lastAction := uTurn
                 } else {
                     turnCount = 0;
@@ -154,9 +168,13 @@ public class CreekFinder implements DecisionMaker {
                     return turnRight();
                 }
             }
-            case 3, 5 -> {
+            case 3, 5, 6, 8, 10 -> {
                 turnCount++;
                 return flyForward();
+            }
+            case 7,9,11 ->{
+                turnCount++;
+                return scanPosition();
             }
             default -> {return null;}
         }
