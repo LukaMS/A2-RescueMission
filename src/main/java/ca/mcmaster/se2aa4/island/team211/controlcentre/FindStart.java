@@ -3,59 +3,35 @@ package ca.mcmaster.se2aa4.island.team211.controlcentre;
 import ca.mcmaster.se2aa4.island.team211.drone.Drone;
 import org.json.JSONObject;
 
-public class FindStart implements DecisionMaker{
-    private final Drone drone;
-    public static Action lastAction = null;
-    public static Action action = null;
+public class FindStart extends PhaseOneCommonDecisions {
     private boolean foundStart = false;
 
     public FindStart(Drone drone) {
-        this.drone = drone;
+        setDrone(drone);
+        setLastAction(null);
     }
 
     @Override
     public JSONObject makeDecision() {
-        action = null;
         JSONObject parameters;
         if(!foundStart){
             if(lastAction == null){
-                parameters = findStart(drone);
-                action = Action.echo;
-                lastAction = action;
-                return sendDecision(action, parameters);
+                parameters = findStart();
+                setLastAction(Action.echo);
+                return super.sendDecision(lastAction, parameters);
             } else {
                 drone.droneActions.setStart(drone);
                 foundStart = true;
-                action = Action.scan;
-                lastAction = action;
-                return sendDecision(action);
+                lastAction = Action.scan;
+                return super.sendDecision(lastAction);
             }
         }
-        return sendDecision(Action.stop);
+        return super.sendDecision(Action.stop);
     }
 
-    @Override
-    public Action getLastAction() {
-        return lastAction;
-    }
-
-
-    public JSONObject sendDecision(Action action, JSONObject parameters){
-        JSONObject decision = new JSONObject();
-        decision.put("action", action).put("parameters", parameters);
-        return decision;
-    }
-
-    public JSONObject sendDecision(Action action){
-        JSONObject decision = new JSONObject();
-        decision.put("action", action);
-        return decision;
-    }
-
-    public JSONObject findStart(Drone drone){
+    public JSONObject findStart(){
         JSONObject params = new JSONObject();
-        String currentHeading = drone.direction;
-        switch (currentHeading){
+        switch (drone.direction){
             case "N", "S":
                 params.put("direction", "W");
                 break;
@@ -66,4 +42,5 @@ public class FindStart implements DecisionMaker{
         }
         return params;
     }
+
 }

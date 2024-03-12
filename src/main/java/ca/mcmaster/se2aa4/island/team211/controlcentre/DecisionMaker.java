@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 public interface DecisionMaker {
     JSONObject makeDecision();
+
     Action getLastAction();
 
     JSONObject sendDecision(Action action, JSONObject parameters);
