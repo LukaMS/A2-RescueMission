@@ -34,7 +34,7 @@ public class GridSearch extends PhaseOneCommonDecisions {
     @Override
     public JSONObject makeDecision() {
         //stop conditions
-        if (!drone.emergencySites.isEmpty()) {
+        if (!drone.emergencySites.isEmpty() && !drone.creeks.isEmpty()) {
             drone.decisionMaker = new CreekFinder(drone, lastTurn);
             return super.flyForward();
         }

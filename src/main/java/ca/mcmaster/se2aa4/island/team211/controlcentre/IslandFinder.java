@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 public class IslandFinder extends PhaseOneCommonDecisions {
-    private String lastEchoDirection;
+    private String lastEchoDirection = "RIGHT";
     private boolean adjust = true;
 
     public IslandFinder(Drone drone){
@@ -113,6 +113,9 @@ public class IslandFinder extends PhaseOneCommonDecisions {
         return super.sendDecision(lastAction, parameter);
     }
 
-
-
+    public String getLastEchoDirection() {return lastEchoDirection;}
+    public Drone getDrone(){return super.getDrone();}
+    public boolean isFlyToGround(){return super.isFlyToGround();}
+    public Integer getTurnCount(){return super.getTurnCount();}
+    public void setLastAction(Action newAction){super.setLastAction(newAction);}
 }
