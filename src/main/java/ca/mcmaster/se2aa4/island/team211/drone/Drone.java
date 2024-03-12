@@ -18,6 +18,7 @@ public class Drone {
     public String right;
     public JSONArray currentBiomes = null;
     public final Battery battery = new Battery();
+
     public static String status = "OK";
     public final Radar radar = new Radar();
     public DecisionMaker decisionMaker;
