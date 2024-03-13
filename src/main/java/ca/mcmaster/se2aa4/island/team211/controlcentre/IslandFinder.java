@@ -114,12 +114,6 @@ public class IslandFinder extends PhaseOneCommonDecisions {
     }
 
     public String getLastEchoDirection() {return lastEchoDirection;}
-    public Drone getDrone(){return super.getDrone();}
-    public boolean isFlyToGround(){return super.isFlyToGround();}
-    public void setFlyToGround(boolean set){super.setFlyToGround(set);}
-    public Integer getTurnCount(){return super.getTurnCount();}
-    public void setTurnCount(Integer turnCount){super.setTurnCount(turnCount);}
-    public void setLastAction(Action newAction){super.setLastAction(newAction);}
     public boolean isAdjust(){return adjust;}
     public void setAdjust(boolean set){adjust = set;}
 

@@ -43,4 +43,5 @@ public class FindStart extends PhaseOneCommonDecisions {
         return params;
     }
 
+    public boolean isFoundStart() {return foundStart;}
 }
