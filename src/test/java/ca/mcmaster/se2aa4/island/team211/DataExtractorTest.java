@@ -7,8 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DataExtractorTest {
 
@@ -70,9 +69,11 @@ public class DataExtractorTest {
         JSONObject extraInfo = new JSONObject();
         extraInfo.put("creeks", new JSONArray().put("creekId"));
         extraInfo.put("sites", new JSONArray().put("siteId"));
+        extraInfo.put("biomes", new JSONArray().put("OCEAN"));
 
         drone.extractdata(extraInfo);
         assertTrue(drone.creeks.containsKey("creekId"));
         assertTrue(drone.emergencySites.containsKey("siteId"));
+        assertEquals("OCEAN", drone.currentBiomes.get(0));
     }
 }
