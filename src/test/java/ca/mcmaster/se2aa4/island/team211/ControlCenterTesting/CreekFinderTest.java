@@ -6,6 +6,7 @@ import ca.mcmaster.se2aa4.island.team211.drone.Drone;
 import ca.mcmaster.se2aa4.island.team211.locations.Coordinate;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,6 +16,7 @@ public class CreekFinderTest  {
     private Drone drone;
     private CreekFinder creekFinder;
 
+    @BeforeEach
     void setUp(){
         drone = new Drone();
         this.drone.x_cord = 6;
@@ -36,7 +38,6 @@ public class CreekFinderTest  {
 
     @Test
     void testCreekFinderOutOfRange() {
-        setUp();
         this.creekFinder.outOfRadiusPermanent = true;
         JSONObject decision = drone.decisionMaker.makeDecision();
         JSONObject expectedDecision = new JSONObject();
@@ -47,7 +48,6 @@ public class CreekFinderTest  {
 
     @Test
     void testCreekFinderLowBattery(){
-        setUp();
         drone.battery.batteryLevel = 900;
 
         JSONObject decision = drone.decisionMaker.makeDecision();
@@ -59,7 +59,6 @@ public class CreekFinderTest  {
 
     @Test
     void testCreekFinderMakeDecisionFly(){
-        setUp();
         drone.battery.batteryLevel = 2000;
         creekFinder.setLastAction(Action.fly);
 
@@ -72,7 +71,6 @@ public class CreekFinderTest  {
 
     @Test
     void testCreekFinderMakeDecisionHeading(){
-        setUp();
         drone.battery.batteryLevel = 2000;
         creekFinder.setLastAction(Action.heading);
 
@@ -85,7 +83,6 @@ public class CreekFinderTest  {
 
     @Test
     void testCreekFinderMakeDecisionNull(){
-        setUp();
         drone.battery.batteryLevel = 2000;
         //creekFinder.setLastAction(Action.heading);
 
@@ -97,8 +94,7 @@ public class CreekFinderTest  {
     }
 
     @Test
-    void testCreekFinderMakeDecisionEchoScanOutOfRange(){
-        setUp();
+    void testCreekFinderMakeDecisionScanOutOfRange(){
         drone.battery.batteryLevel = 2000;
         creekFinder.setLastAction(Action.scan);
 
@@ -112,8 +108,7 @@ public class CreekFinderTest  {
     }
 
     @Test
-    void testCreekFinderMakeDecisionEchoScanOverOcean(){
-        setUp();
+    void testCreekFinderMakeDecisionScanOverOcean(){
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         drone.currentBiomes = new JSONArray();
@@ -131,8 +126,7 @@ public class CreekFinderTest  {
     }
 
     @Test
-    void testCreekFinderMakeDecisionEchoScanNOTOverOcean(){
-        setUp();
+    void testCreekFinderMakeDecisionScanNOTOverOcean(){
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         drone.currentBiomes = new JSONArray();
@@ -149,7 +143,6 @@ public class CreekFinderTest  {
 
     @Test
     void testCreekFinderMakeDecisionEchoFlyToGround(){
-        setUp();
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         drone.radar.found = "GROUND";
@@ -164,7 +157,6 @@ public class CreekFinderTest  {
 
     @Test
     void testCreekFinderMakeDecisionEchoNotTurned(){
-        setUp();
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         creekFinder.setTurned(false);
@@ -184,7 +176,6 @@ public class CreekFinderTest  {
 
     @Test
     void testCreekFinderMakeDecisionEchoTurned(){
-        setUp();
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         creekFinder.setTurned(true);
@@ -202,7 +193,6 @@ public class CreekFinderTest  {
 
     @Test
     void testCreekFinderMakeDecisionUTurn(){
-        setUp();
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         creekFinder.setTurnDirection("RIGHT");
@@ -219,7 +209,6 @@ public class CreekFinderTest  {
 
     @Test
     void testCreekFinderMakeDecisionUTurn2(){
-        setUp();
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         creekFinder.setTurnDirection("LEFT");
@@ -236,7 +225,6 @@ public class CreekFinderTest  {
 
     @Test
     void testCreekFinderMakeDecisionReAlign(){
-        setUp();
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         creekFinder.setTurnDirection("RIGHT");
@@ -253,7 +241,6 @@ public class CreekFinderTest  {
 
     @Test
     void testCreekFinderMakeDecisionReturnToRadius(){
-        setUp();
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         creekFinder.setTurnDirection("RIGHT");
@@ -270,7 +257,6 @@ public class CreekFinderTest  {
 
     @Test
     void testCreekFinderMakeDecisionReturnToRadiusOutOfRange(){
-        setUp();
         drone.battery.batteryLevel = 2000;
         creekFinder.setTurnDirection("RIGHT");
         creekFinder.setLastAction(Action.returnToRadius);
