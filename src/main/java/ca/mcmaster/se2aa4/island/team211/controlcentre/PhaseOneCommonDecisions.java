@@ -14,21 +14,21 @@ public abstract class PhaseOneCommonDecisions implements DecisionMaker{
     protected boolean flyToGround; //flag to see if the drone should be flying to a separate piece of land
     protected Integer turnCount; //used for determining how many more turns need to be made
 
-    protected void setDrone(Drone drone){this.drone = drone;}
-    protected void setTurned(boolean turned){this.turned = turned;}
-    protected void setLastAction(Action lastAction){this.lastAction = lastAction;}
-    protected void setLastTurn(String lastTurn){this.lastTurn = lastTurn;}
-    protected void setTurnDirection(String turnDirection){this.turnDirection = turnDirection;}
-    protected void setFlyToGround(boolean flyToGround){this.flyToGround = flyToGround;}
-    protected void setTurnCount(Integer turnCount){this.turnCount = turnCount;}
+    public void setDrone(Drone drone){this.drone = drone;}
+    public void setTurned(boolean turned){this.turned = turned;}
+    public void setLastAction(Action lastAction){this.lastAction = lastAction;}
+    public void setLastTurn(String lastTurn){this.lastTurn = lastTurn;}
+    public void setTurnDirection(String turnDirection){this.turnDirection = turnDirection;}
+    public void setFlyToGround(boolean flyToGround){this.flyToGround = flyToGround;}
+    public void setTurnCount(Integer turnCount){this.turnCount = turnCount;}
 
-    protected Drone getDrone(){return drone;}
-    protected boolean isTurned(){return turned;}
+    public Drone getDrone(){return drone;}
+    public boolean isTurned(){return turned;}
     public Action getLastAction(){return lastAction;}
-    protected String getLastTurn(){return lastTurn;}
-    protected String getTurnDirection(){return turnDirection;}
-    protected boolean isFlyToGround(){return flyToGround;}
-    protected Integer getTurnCount(){return turnCount;}
+    public String getLastTurn(){return lastTurn;}
+    public String getTurnDirection(){return turnDirection;}
+    public boolean isFlyToGround(){return flyToGround;}
+    public Integer getTurnCount(){return turnCount;}
 
     @Override
     public JSONObject sendDecision(Action action, JSONObject parameters){
