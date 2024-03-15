@@ -9,13 +9,16 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.runner.notification.RunListener;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DroneTest {
+class DroneTest {
 
     private Drone drone;
 
@@ -37,160 +40,67 @@ public class DroneTest {
         }
     }
 
-    @Test
-    void testTurnRightEast() {
-        setUpDrone("E");
+    @ParameterizedTest
+    @CsvSource({
+            "E, 1, 1, S",
+            "W, -1, -1, N",
+            "N, 1, -1, E",
+            "S, -1, 1, W"
+    })
+    void testTurnRight(String initialDirection, int expectedX, int expectedY, String expectedDirection) {
+        setUpDrone(initialDirection);
         drone.droneActions.turnRight(drone);
 
-        assertEquals(1, drone.x_cord);
-        assertEquals(1, drone.y_cord);
-        assertEquals("S", drone.direction);
+        assertEquals(expectedX, drone.x_cord);
+        assertEquals(expectedY, drone.y_cord);
+        assertEquals(expectedDirection, drone.direction);
     }
 
-    @Test
-    void testTurnRightWest() {
-        setUpDrone("W");
-        drone.droneActions.turnRight(drone);
-
-        assertEquals(-1, drone.x_cord);
-        assertEquals(-1, drone.y_cord);
-        assertEquals("N", drone.direction);
-    }
-
-    @Test
-    void testTurnRightNorth() {
-        setUpDrone("N");
-        drone.droneActions.turnRight(drone);
-
-        assertEquals(1, drone.x_cord);
-        assertEquals(-1, drone.y_cord);
-        assertEquals("E", drone.direction);
-    }
-
-    @Test
-    void testTurnRightSouth() {
-        setUpDrone("S");
-        drone.droneActions.turnRight(drone);
-
-        assertEquals(-1, drone.x_cord);
-        assertEquals(1, drone.y_cord);
-        assertEquals("W", drone.direction);
-    }
-
-    @Test
-    void testTurnLeftEast() {
-        setUpDrone("E");
+    @ParameterizedTest
+    @CsvSource({
+            "E, 1, -1, N",
+            "W, -1, 1, S",
+            "N, -1, -1, W",
+            "S, 1, 1, E"
+    })
+    void testTurnLeft(String initialDirection, int expectedX, int expectedY, String expectedDirection) {
+        setUpDrone(initialDirection);
         drone.droneActions.turnLeft(drone);
 
-        assertEquals(1, drone.x_cord);
-        assertEquals(-1, drone.y_cord);
-        assertEquals("N", drone.direction);
+        assertEquals(expectedX, drone.x_cord);
+        assertEquals(expectedY, drone.y_cord);
+        assertEquals(expectedDirection, drone.direction);
     }
 
-    @Test
-    void testTurnLeftWest() {
-        setUpDrone("W");
-        drone.droneActions.turnLeft(drone);
-
-        assertEquals(-1, drone.x_cord);
-        assertEquals(1, drone.y_cord);
-        assertEquals("S", drone.direction);
-    }
-
-    @Test
-    void testTurnLeftNorth() {
-        setUpDrone("N");
-        drone.droneActions.turnLeft(drone);
-
-        assertEquals(-1, drone.x_cord);
-        assertEquals(-1, drone.y_cord);
-        assertEquals("W", drone.direction);
-    }
-
-    @Test
-    void testTurnLeftSouth() {
-        setUpDrone("S");
-        drone.droneActions.turnLeft(drone);
-
-        assertEquals(1, drone.x_cord);
-        assertEquals(1, drone.y_cord);
-        assertEquals("E", drone.direction);
-    }
-
-    @Test
-    void testForwardNorth(){
-        setUpDrone("N");
+    @ParameterizedTest
+    @CsvSource({
+            "N, 0, -1, N",
+            "S, 0, 1, S",
+            "E, 1, 0, E",
+            "W, -1, 0, W"
+    })
+    void testForward(String initialDirection, int expectedX, int expectedY, String expectedDirection) {
+        setUpDrone(initialDirection);
         drone.droneActions.forward(drone);
 
-        assertEquals(0, drone.x_cord);
-        assertEquals(-1, drone.y_cord);
-        assertEquals("N", drone.direction);
+        assertEquals(expectedX, drone.x_cord);
+        assertEquals(expectedY, drone.y_cord);
+        assertEquals(expectedDirection, drone.direction);
     }
 
-    @Test
-    void testForwardSouth(){
-        setUpDrone("S");
-        drone.droneActions.forward(drone);
-
-        assertEquals(0, drone.x_cord);
-        assertEquals(1, drone.y_cord);
-        assertEquals("S", drone.direction);
-    }
-
-    @Test
-    void testForwardEast(){
-        setUpDrone("E");
-        drone.droneActions.forward(drone);
-
-        assertEquals(1, drone.x_cord);
-        assertEquals(0, drone.y_cord);
-        assertEquals("E", drone.direction);
-    }
-
-    @Test
-    void testForwardWest(){
-        setUpDrone("W");
-        drone.droneActions.forward(drone);
-
-        assertEquals(-1, drone.x_cord);
-        assertEquals(0, drone.y_cord);
-        assertEquals("W", drone.direction);
-    }
-
-    @Test
-    void testGetSidesNorth(){
-        setUpDrone("N");
+    @ParameterizedTest
+    @CsvSource({
+            "N, W, E",
+            "E, N, S",
+            "S, E, W",
+            "W, S, N"
+    })
+    void testGetSides(String initial, String expectedLeft, String expectedRight){
+        setUpDrone(initial);
         drone.droneActions.getSides(drone);
 
-        assertEquals("W", drone.left);
-        assertEquals("E", drone.right);
-    }
-
-    @Test
-    void testGetSidesEast(){
-        setUpDrone("E");
-        drone.droneActions.getSides(drone);
-
-        assertEquals("N", drone.left);
-        assertEquals("S", drone.right);
-    }
-
-    @Test
-    void testGetSidesSouth(){
-        setUpDrone("S");
-        drone.droneActions.getSides(drone);
-
-        assertEquals("E", drone.left);
-        assertEquals("W", drone.right);
-    }
-
-    @Test
-    void testGetSidesWest(){
-        setUpDrone("W");
-        drone.droneActions.getSides(drone);
-
-        assertEquals("S", drone.left);
-        assertEquals("N", drone.right);
+        assertEquals(expectedLeft, drone.left);
+        assertEquals(expectedRight, drone.right);
     }
 
 

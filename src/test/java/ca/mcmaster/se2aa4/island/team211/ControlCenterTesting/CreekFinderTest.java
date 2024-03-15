@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class CreekFinderTest  {
+class CreekFinderTest  {
 
     private Drone drone;
     private CreekFinder creekFinder;
@@ -38,7 +38,7 @@ public class CreekFinderTest  {
 
     @Test
     void testCreekFinderOutOfRange() {
-        this.creekFinder.outOfRadiusPermanent = true;
+        creekFinder.setOutOfRadiusPermanent(true);
         JSONObject decision = drone.decisionMaker.makeDecision();
         JSONObject expectedDecision = new JSONObject();
         expectedDecision.put("action", "stop");

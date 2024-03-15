@@ -15,7 +15,7 @@ import org.json.JSONTokener;
 
 public class Explorer implements IExplorerRaid {
 
-    public Drone drone;
+    private Drone drone;
     private final Logger logger = LogManager.getLogger();
 
 
@@ -44,7 +44,7 @@ public class Explorer implements IExplorerRaid {
 
         try {
             JSONObject decision = drone.droneActions.getDecision(drone);
-            if (logger.isInfoEnabled()) {logger.info("** Decision: {}",decision.toString());}
+            if (logger.isInfoEnabled()) {logger.info("** Decision: {}",decision);}
             return decision.toString();
         } catch (Exception e){
             if (logger.isErrorEnabled()) {logger.error(e.toString());}

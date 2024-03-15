@@ -24,7 +24,9 @@ public class DataExtractor {
                         String creek = (String) extraInfo.getJSONArray("creeks").get(0);
                         Coordinate creekCord = DroneActions.getCordinates(drone);
                         drone.creeks.put(creek, creekCord);
-                    } catch (Exception ignored){ }
+                    } catch (Exception ignored){
+                        break;
+                    }
                     //try and add emergSite to drone hashmap
                     try {
                         String site = (String) extraInfo.getJSONArray("sites").get(0);

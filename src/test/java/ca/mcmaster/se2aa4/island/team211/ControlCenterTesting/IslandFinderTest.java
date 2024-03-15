@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class IslandFinderTest  {
+class IslandFinderTest  {
 
     @Test
-    public void testInitialIslandFinderState() {
+    void testInitialIslandFinderState() {
         Drone mockDrone = new Drone();
         IslandFinder islandFinder = new IslandFinder(mockDrone);
 
@@ -25,7 +25,7 @@ public class IslandFinderTest  {
     }
 
     @Test
-    public void testMakeDecision() {
+    void testMakeDecision() {
         Drone mockDrone = new Drone();
         IslandFinder islandFinder = new IslandFinder(mockDrone);
         mockDrone.x_cord = 1;
@@ -53,7 +53,7 @@ public class IslandFinderTest  {
     }
 
 
-    public void nullTest(IslandFinder islandFinder, Drone mockDrone){
+    void nullTest(IslandFinder islandFinder, Drone mockDrone){
         islandFinder.setLastAction(null);
 
         JSONObject decisionTest = islandFinder.makeDecision();
@@ -67,7 +67,7 @@ public class IslandFinderTest  {
         assertEquals(decision.toString(), decisionTest.toString());
     }
 
-    public void echoTest(IslandFinder islandFinder, Drone mockDrone){
+    void echoTest(IslandFinder islandFinder, Drone mockDrone){
         islandFinder.setLastAction(Action.echo);
         mockDrone.radar.found = "GROUND";
         islandFinder.setAdjust(true);
@@ -83,7 +83,7 @@ public class IslandFinderTest  {
         assertEquals(1, mockDrone.y_cord);
     }
 
-    public void flyTest(IslandFinder islandFinder, Drone mockDrone){
+    void flyTest(IslandFinder islandFinder, Drone mockDrone){
         islandFinder.setLastAction(Action.fly);
         islandFinder.setFlyToGround(true);
 
@@ -97,7 +97,7 @@ public class IslandFinderTest  {
         assertEquals(1, mockDrone.y_cord);
     }
 
-    public void scanTest(IslandFinder islandFinder, Drone mockDrone){
+    void scanTest(IslandFinder islandFinder, Drone mockDrone){
         islandFinder.setLastAction(Action.scan);
         islandFinder.setFlyToGround(true);
         mockDrone.currentBiomes = new JSONArray().put(0, "OCEAN");
@@ -115,7 +115,7 @@ public class IslandFinderTest  {
 
     }
 
-    public void headingTest(IslandFinder islandFinder, Drone mockDrone){
+    void headingTest(IslandFinder islandFinder, Drone mockDrone){
         islandFinder.setLastAction(Action.heading);
 
         JSONObject decisionTest = islandFinder.makeDecision();
@@ -128,7 +128,7 @@ public class IslandFinderTest  {
         assertEquals(1, mockDrone.y_cord);
     }
 
-    public void reAlignTest(IslandFinder islandFinder, Drone mockDrone){
+    void reAlignTest(IslandFinder islandFinder, Drone mockDrone){
         JSONObject decisionTest;
         switch (islandFinder.getTurnCount()){
             case 0 -> {
@@ -217,7 +217,7 @@ public class IslandFinderTest  {
             }
         }
     }
-    public void defaultTest(IslandFinder islandFinder){
+    void defaultTest(IslandFinder islandFinder){
         islandFinder.setLastAction(Action.uTurn);
         JSONObject decisionTest = islandFinder.makeDecision();
         assertNull(decisionTest);

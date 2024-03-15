@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class FindStartTest  {
+class FindStartTest  {
 
     @Test
-    public void testInitialFindStartState() {
+    void testInitialFindStartState() {
         Drone mockDrone = new Drone();
         FindStart findStart = new FindStart(mockDrone);
 
@@ -22,7 +22,7 @@ public class FindStartTest  {
     }
 
     @Test
-    public void testFindStartWhenNotAlreadyFound() {
+    void testFindStartWhenNotAlreadyFound() {
         Drone mockDrone = new Drone();
         FindStart findStart = new FindStart(mockDrone);
         mockDrone.direction = "E";
@@ -37,7 +37,7 @@ public class FindStartTest  {
     }
 
     @Test
-    public void testFindStartWhenAlreadyFound() {
+    void testFindStartWhenAlreadyFound() {
         Drone mockDrone = new Drone();
         FindStart findStart = new FindStart(mockDrone);
         findStart.setLastAction(Action.echo);

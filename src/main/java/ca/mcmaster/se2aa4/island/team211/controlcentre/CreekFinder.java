@@ -12,7 +12,7 @@ public class CreekFinder extends PhaseOneCommonDecisions {
     DistanceCalculator distanceCalculator;
     private float minRadius;
     private float droneDistanceToSite;
-    public boolean outOfRadiusPermanent = false;
+    private boolean outOfRadiusPermanent = false;
     private int creekSize;
     private int flyCount = 0;
 
@@ -146,6 +146,8 @@ public class CreekFinder extends PhaseOneCommonDecisions {
         return super.flyForward();
     }
 
-
+    public void setOutOfRadiusPermanent(boolean input){
+        this.outOfRadiusPermanent = input;
+    }
 
 }
