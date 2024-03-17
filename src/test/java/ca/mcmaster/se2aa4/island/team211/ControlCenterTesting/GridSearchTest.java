@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class GridSearchTest  {
+class GridSearchTest  {
 
     private Drone drone;
     private GridSearch gridSearch;

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DataExtractorTest {
+class DataExtractorTest {
 
     private static class FakeDecisionMaker implements DecisionMaker {
         private final Action lastAction;
@@ -60,7 +60,7 @@ public class DataExtractorTest {
 
         drone.extractdata(extraInfo);
         assertEquals(100, drone.radar.range);
-        assertEquals(drone.radar.found, "ground");
+        assertEquals( "ground", drone.radar.found);
     }
 
     @Test
