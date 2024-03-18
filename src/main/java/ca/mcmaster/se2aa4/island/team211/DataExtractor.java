@@ -25,7 +25,7 @@ public class DataExtractor {
                         Coordinate creekCord = DroneActions.getCordinates(drone);
                         drone.creeks.put(creek, creekCord);
                     } catch (Exception ignored){
-                        break;
+                        //break;
                     }
                     //try and add emergSite to drone hashmap
                     try {
