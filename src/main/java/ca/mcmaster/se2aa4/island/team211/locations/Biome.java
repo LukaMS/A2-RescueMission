@@ -1,5 +1,7 @@
+/*
+Stores all of the biomes on the map.
+ */
 package ca.mcmaster.se2aa4.island.team211.locations;
-
 public enum Biome {
     OCEAN,
     LAKE,

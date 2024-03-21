@@ -1,3 +1,7 @@
+/*
+Extract the information the drone finds after performing an action in the game
+ */
+
 package ca.mcmaster.se2aa4.island.team211;
 
 import ca.mcmaster.se2aa4.island.team211.controlcentre.DecisionMaker;

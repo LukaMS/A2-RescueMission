@@ -1,12 +1,12 @@
+/*
+Actions needed to keep track of the Drone's coordinates as it performs different actions
+ */
 package ca.mcmaster.se2aa4.island.team211.drone;
-
 import ca.mcmaster.se2aa4.island.team211.controlcentre.IslandFinder;
 import ca.mcmaster.se2aa4.island.team211.locations.Coordinate;
 import org.json.JSONObject;
 
 public class DroneActions {
-
-
     public JSONObject getDecision(Drone drone){
         try {
             getSides(drone);
@@ -21,7 +21,6 @@ public class DroneActions {
     public static Coordinate getCordinates(Drone drone) {
         return new Coordinate(drone.x_cord, drone.y_cord);
     }
-
 
     public void getSides(Drone drone){
         switch (drone.direction){
@@ -47,6 +46,7 @@ public class DroneActions {
         }
         drone.decisionMaker = new IslandFinder(drone);
     }
+
     public Integer[] printCoords(Drone drone){
         Integer[] coords = new Integer[2];
         coords[0] = drone.x_cord;

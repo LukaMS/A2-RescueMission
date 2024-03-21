@@ -1,3 +1,7 @@
+/*
+Find the starting coordinates of the drone
+ */
+
 package ca.mcmaster.se2aa4.island.team211.controlcentre;
 
 import ca.mcmaster.se2aa4.island.team211.drone.Drone;

@@ -1,3 +1,7 @@
+/*
+Recieves decisions from DecisionMakers, and sends them to the game to perform actions
+ */
+
 package ca.mcmaster.se2aa4.island.team211;
 
 import java.io.StringReader;

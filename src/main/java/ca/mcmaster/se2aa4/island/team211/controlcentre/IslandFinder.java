@@ -1,3 +1,6 @@
+/*
+finds the coast of the island, such that it is set up to efficiently use GridSearch (it will not miss any sections of land)
+ */
 package ca.mcmaster.se2aa4.island.team211.controlcentre;
 
 import ca.mcmaster.se2aa4.island.team211.drone.Drone;

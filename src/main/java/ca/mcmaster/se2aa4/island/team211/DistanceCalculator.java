@@ -1,3 +1,7 @@
+/*
+Calculates the distance from the drone to the emergency site, and from the emergency site to the creeks
+ */
+
 package ca.mcmaster.se2aa4.island.team211;
 
 import ca.mcmaster.se2aa4.island.team211.drone.Drone;

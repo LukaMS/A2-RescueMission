@@ -1,3 +1,7 @@
+/*
+Initializes the starting information of the drone when the game begins
+ */
+
 package ca.mcmaster.se2aa4.island.team211;
 
 import static eu.ace_design.island.runner.Runner.run;

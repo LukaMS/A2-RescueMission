@@ -1,3 +1,7 @@
+/*
+Stores emergency sites found on the island
+ */
+
 package ca.mcmaster.se2aa4.island.team211.locations;
 
 import java.util.Map;

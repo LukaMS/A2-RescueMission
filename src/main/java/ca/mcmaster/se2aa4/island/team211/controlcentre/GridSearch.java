@@ -1,3 +1,6 @@
+/*
+Scans up and down the island until it finds the emergency site and at least one creek
+ */
 package ca.mcmaster.se2aa4.island.team211.controlcentre;
 
 import ca.mcmaster.se2aa4.island.team211.drone.Drone;

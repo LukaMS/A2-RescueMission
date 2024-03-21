@@ -1,3 +1,8 @@
+/*
+Similar logic to Gridsearch while scanning, except it turns around once it reaches OCEAN,
+or it exits the range of the closest creek
+ */
+
 package ca.mcmaster.se2aa4.island.team211.controlcentre;
 
 import ca.mcmaster.se2aa4.island.team211.DistanceCalculator;
