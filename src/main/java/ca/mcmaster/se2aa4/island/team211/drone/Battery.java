@@ -7,7 +7,11 @@ public class Battery {
     public int batteryLevel;
 
     public void discharge(Integer value){
-        batteryLevel -= value;
+        if (batteryLevel - value > 0) {
+            batteryLevel -= value;
+        }else{
+            batteryLevel = 0;
+        }
     }
 
 }
