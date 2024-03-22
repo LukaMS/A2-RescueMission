@@ -12,5 +12,4 @@ public enum Action {
     scan,
     uTurn, uTurn2,
     reAlign, returnToRadius;
-    public static int cost;
 }

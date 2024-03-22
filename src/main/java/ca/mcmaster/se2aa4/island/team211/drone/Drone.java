@@ -14,26 +14,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Drone {
+    public final Battery battery = new Battery();
+
+    public final Radar radar = new Radar();
+
+    private final DataExtractor dataExtractor = new DataExtractor();
+
     public String direction;
     public String initialDirection;
     public String left;
 
     public String right;
     public JSONArray currentBiomes = null;
-    public final Battery battery = new Battery();
 
-    public static String status = "OK";
+    public String status = "OK";
 
-    public final Radar radar = new Radar();
     public DecisionMaker decisionMaker;
-    private final DataExtractor dataExtractor = new DataExtractor();
     public Integer x_cord;
 
     public Integer y_cord;
-    //Put the hashmaps inside the drone class (we can switch this around, but it works)
+
     public Map<String, Coordinate> creeks = new HashMap<>();
     public Map<String, Coordinate> emergencySites = new HashMap<>();
     public DroneActions droneActions = new DroneActions();
+
+
     /*
     initialized the drone based off of the given information in the info file
      */
@@ -43,7 +48,8 @@ public class Drone {
         battery.batteryLevel = info.getInt("budget");
         decisionMaker = new FindStart(this);
     }
-    public void extractdata(JSONObject extraInfo) {
+
+    public void extractData(JSONObject extraInfo) {
         dataExtractor.extract(extraInfo,this, decisionMaker);
     }
 }
