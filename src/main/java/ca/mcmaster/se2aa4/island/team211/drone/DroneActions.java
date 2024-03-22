@@ -8,11 +8,8 @@ import org.json.JSONObject;
 
 public class DroneActions {
     public JSONObject getDecision(Drone drone){
-        try {
-            getSides(drone);
-        } catch(Exception e){
-            e.printStackTrace();
-        }
+        try { getSides(drone);}
+        catch(Exception e){e.printStackTrace();}
         return drone.decisionMaker.makeDecision();
     }
 
@@ -54,63 +51,71 @@ public class DroneActions {
 
     public void turnLeft(Drone drone){
         switch  (drone.getDirection()){
-            case "N" -> {
+            case "N" : {
                 drone.x_cord -= 1;
                 drone.y_cord -= 1;
                 drone.setDirection("W");
+                break;
             }
-            case "E" -> {
+            case "E" : {
                 drone.x_cord += 1;
                 drone.y_cord -= 1;
                 drone.setDirection("N");
+                break;
             }
-            case "S" -> {
+            case "S" : {
                 drone.x_cord += 1;
                 drone.y_cord += 1;
                 drone.setDirection("E");
+                break;
             }
-            case "W" -> {
+            case "W" : {
                 drone.x_cord -= 1;
                 drone.y_cord += 1;
                 drone.setDirection("S");
+                break;
             }
-            default -> {}
+            default:
         }
     }
 
     public void turnRight(Drone drone){
         switch  (drone.getDirection()){
-            case "N" -> {
+            case "N" : {
                 drone.x_cord += 1;
                 drone.y_cord -= 1;
                 drone.setDirection("E");
+                break;
             }
-            case "E" -> {
+            case "E" : {
                 drone.x_cord += 1;
                 drone.y_cord += 1;
                 drone.setDirection("S");
+                break;
             }
-            case "S" -> {
+            case "S" : {
                 drone.x_cord -= 1;
                 drone.y_cord += 1;
                 drone.setDirection("W");
+                break;
             }
-            case "W" -> {
+            case "W" :{
                 drone.x_cord -= 1;
                 drone.y_cord -= 1;
                 drone.setDirection("N");
+                break;
             }
-            default -> {}
+            default:
         }
     }
 
     public void forward(Drone drone){
         switch (drone.getDirection()){
-            case "N" -> drone.y_cord--;
-            case "E" -> drone.x_cord++;
-            case "S" -> drone.y_cord++;
-            case "W" -> drone.x_cord--;
-            default -> {}
+            case "N" : drone.y_cord--; break;
+            case "E" : drone.x_cord++; break;
+            case "S" : drone.y_cord++; break;
+            case "W" : drone.x_cord--; break;
+            default:
         }
     }
 }
