@@ -106,7 +106,7 @@ public abstract class PhaseOneCommonDecisions implements DecisionMaker{
     }
 
     private boolean shouldChangeLastAction(){
-        return !(Objects.equals(lastAction,Action.uTurn) || Objects.equals(lastAction,Action.reAlign) || Objects.equals(lastAction,Action.uTurn2) || Objects.equals(lastAction,Action.returnToRadius));
+        return !(Objects.equals(lastAction,Action.U_TURN) || Objects.equals(lastAction,Action.RE_ALIGN) || Objects.equals(lastAction,Action.U_TURN_2) || Objects.equals(lastAction,Action.RETURN_TO_RADIUS));
     }
 
      /*
@@ -120,7 +120,7 @@ public abstract class PhaseOneCommonDecisions implements DecisionMaker{
 
     //flips the drones direction
     public JSONObject uTurn() {
-        lastAction = Action.uTurn;
+        lastAction = Action.U_TURN;
         turned = true;
         switch (turnCount) {
             case 0 -> {
@@ -155,7 +155,7 @@ public abstract class PhaseOneCommonDecisions implements DecisionMaker{
         }
     }
     public JSONObject uTurn2(){
-        lastAction = Action.uTurn2;
+        lastAction = Action.U_TURN_2;
         turned = true;
         switch (turnCount){
             case 0, 1, 2, 4 -> {
@@ -186,7 +186,7 @@ public abstract class PhaseOneCommonDecisions implements DecisionMaker{
     }
 
     public JSONObject reAlign() {
-        lastAction = Action.reAlign;
+        lastAction = Action.RE_ALIGN;
         if (turnCount == 0) {
             if (Objects.equals(lastTurn, "RIGHT")) {
                 turnCount++;

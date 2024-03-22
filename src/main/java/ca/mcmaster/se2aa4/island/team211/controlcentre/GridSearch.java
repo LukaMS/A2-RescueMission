@@ -90,10 +90,10 @@ public class GridSearch extends PhaseOneCommonDecisions {
                 }
 
             }
-            case reAlign: {
+            case RE_ALIGN: {
                 return super.reAlign();
             }
-            case uTurn: {
+            case U_TURN: {
                 if (turnCount < 6) {
                     return super.uTurn(); //lastAction := uTurn
                 } else {
@@ -101,7 +101,7 @@ public class GridSearch extends PhaseOneCommonDecisions {
                     return super.echoAhead(); // lastAction := echo
                 }
             }
-            case uTurn2: {
+            case U_TURN_2: {
                 if (turnCount < 6) {
                     return super.uTurn2(); //lastAction := uTurn
                 } else {

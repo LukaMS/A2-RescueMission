@@ -63,7 +63,7 @@ public class IslandFinder extends PhaseOneCommonDecisions {
             case heading: {
                 return super.flyToGround();
             }
-            case reAlign:{
+            case RE_ALIGN:{
                 if (turnCount < 5) {
                     return adjustHeading();
                 }
@@ -78,7 +78,7 @@ public class IslandFinder extends PhaseOneCommonDecisions {
     }
 
     private JSONObject adjustHeading() {
-        lastAction = Action.reAlign;
+        lastAction = Action.RE_ALIGN;
         switch (turnCount){
             case 0 -> {
                 turnCount++;

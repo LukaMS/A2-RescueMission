@@ -45,7 +45,7 @@ class IslandFinderTest  {
 
         for (int i = 0; i < 7; i++) {
             islandFinder.setTurnCount(i);
-            islandFinder.setLastAction(Action.reAlign);
+            islandFinder.setLastAction(Action.RE_ALIGN);
             reAlignTest(islandFinder, mockDrone); //also tests adjustHeading method
         }
 
@@ -73,7 +73,7 @@ class IslandFinderTest  {
         islandFinder.setAdjust(true);
 
         JSONObject decisionTest = islandFinder.makeDecision();
-        assertEquals(Action.reAlign, islandFinder.getLastAction());
+        assertEquals(Action.RE_ALIGN, islandFinder.getLastAction());
         assertEquals(1, islandFinder.getTurnCount());
 
         JSONObject decision = new JSONObject();
@@ -133,7 +133,7 @@ class IslandFinderTest  {
         switch (islandFinder.getTurnCount()){
             case 0 -> {
                 decisionTest = islandFinder.makeDecision();
-                assertEquals(Action.reAlign, islandFinder.getLastAction());
+                assertEquals(Action.RE_ALIGN, islandFinder.getLastAction());
                 JSONObject decision = new JSONObject();
                 decision.put("action", Action.fly);
                 assertEquals(decision.toString(), decisionTest.toString());
@@ -144,7 +144,7 @@ class IslandFinderTest  {
             }
             case 1, 2-> {
                 decisionTest = islandFinder.makeDecision();
-                assertEquals(Action.reAlign, islandFinder.getLastAction());
+                assertEquals(Action.RE_ALIGN, islandFinder.getLastAction());
                 assertEquals("RIGHT", islandFinder.getLastEchoDirection());
 
                 JSONObject parameter = new JSONObject();
@@ -168,7 +168,7 @@ class IslandFinderTest  {
             }
             case 3 -> {
                 decisionTest = islandFinder.makeDecision();
-                assertEquals(Action.reAlign, islandFinder.getLastAction());
+                assertEquals(Action.RE_ALIGN, islandFinder.getLastAction());
                 assertEquals("RIGHT", islandFinder.getLastEchoDirection());
 
                 JSONObject parameter = new JSONObject();
@@ -188,7 +188,7 @@ class IslandFinderTest  {
             case 4 -> {
                 decisionTest = islandFinder.makeDecision();
 
-                assertEquals(Action.reAlign, islandFinder.getLastAction());
+                assertEquals(Action.RE_ALIGN, islandFinder.getLastAction());
 
                 JSONObject decision = new JSONObject();
                 decision.put("action", Action.scan);
@@ -218,7 +218,7 @@ class IslandFinderTest  {
         }
     }
     void defaultTest(IslandFinder islandFinder){
-        islandFinder.setLastAction(Action.uTurn);
+        islandFinder.setLastAction(Action.U_TURN);
         JSONObject decisionTest = islandFinder.makeDecision();
         assertNull(decisionTest);
 

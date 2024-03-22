@@ -114,10 +114,10 @@ public class CreekFinder extends PhaseOneCommonDecisions {
                 }
 
             }
-            case reAlign: {
+            case RE_ALIGN: {
                 return super.reAlign();
             }
-            case uTurn:{
+            case U_TURN:{
                 if (turnCount < 6) {
                     return super.uTurn(); //lastAction := uTurn
                 } else {
@@ -125,7 +125,7 @@ public class CreekFinder extends PhaseOneCommonDecisions {
                     return returnToRadius(); // lastAction := echo
                 }
             }
-            case uTurn2:{
+            case U_TURN_2:{
                 if (turnCount < 6) {
                     return super.uTurn2(); //lastAction := uTurn
                 } else {
@@ -133,7 +133,7 @@ public class CreekFinder extends PhaseOneCommonDecisions {
                     return super.echoAhead(); // lastAction := echo
                 }
             }
-            case returnToRadius:{
+            case RETURN_TO_RADIUS:{
                 if (outOfRange()){
                     return returnToRadius();
                 }
@@ -146,7 +146,7 @@ public class CreekFinder extends PhaseOneCommonDecisions {
 
     private JSONObject returnToRadius(){
         if (flyCount > 10){return stop();}
-        lastAction = Action.returnToRadius;
+        lastAction = Action.RETURN_TO_RADIUS;
         flyCount++;
         return super.flyForward();
     }
