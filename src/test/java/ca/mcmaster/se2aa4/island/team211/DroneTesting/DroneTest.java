@@ -3,16 +3,12 @@ package ca.mcmaster.se2aa4.island.team211.DroneTesting;
 import ca.mcmaster.se2aa4.island.team211.controlcentre.FindStart;
 import ca.mcmaster.se2aa4.island.team211.drone.Drone;
 import ca.mcmaster.se2aa4.island.team211.drone.DroneActions;
-import ca.mcmaster.se2aa4.island.team211.drone.Radar;
 import ca.mcmaster.se2aa4.island.team211.locations.Coordinate;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.runner.notification.RunListener;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,8 +20,8 @@ class DroneTest {
 
     void setUpDrone(String direction){
         drone = new Drone();
-        this.drone.direction = direction;
-        this.drone.initialDirection = drone.direction;
+        this.drone.setDirection(direction);
+        this.drone.initialDirection = drone.getDirection();
         this.drone.x_cord = 0;
         this.drone.y_cord = 0;
         this.drone.decisionMaker = new FindStart(drone);
@@ -53,7 +49,7 @@ class DroneTest {
 
         assertEquals(expectedX, drone.x_cord);
         assertEquals(expectedY, drone.y_cord);
-        assertEquals(expectedDirection, drone.direction);
+        assertEquals(expectedDirection, drone.getDirection());
     }
 
     @ParameterizedTest
@@ -69,7 +65,7 @@ class DroneTest {
 
         assertEquals(expectedX, drone.x_cord);
         assertEquals(expectedY, drone.y_cord);
-        assertEquals(expectedDirection, drone.direction);
+        assertEquals(expectedDirection, drone.getDirection());
     }
 
     @ParameterizedTest
@@ -85,7 +81,7 @@ class DroneTest {
 
         assertEquals(expectedX, drone.x_cord);
         assertEquals(expectedY, drone.y_cord);
-        assertEquals(expectedDirection, drone.direction);
+        assertEquals(expectedDirection, drone.getDirection());
     }
 
     @ParameterizedTest
@@ -144,7 +140,7 @@ class DroneTest {
     void testGetCoordinates(){
         setUpDrone("N");
 
-        Coordinate coords = DroneActions.getCordinates(drone);
+        Coordinate coords = DroneActions.getCoordinates(drone);
 
         assertEquals(coords.xCoordinate, drone.x_cord);
         assertEquals(coords.yCoordinate, drone.y_cord);

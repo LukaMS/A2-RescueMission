@@ -38,7 +38,7 @@ public class DataExtractor {
     private void extractCreek(JSONObject extraInfo, Drone drone){
         try {
             String creek = (String) extraInfo.getJSONArray("creeks").get(0);
-            Coordinate creekCord = DroneActions.getCordinates(drone);
+            Coordinate creekCord = DroneActions.getCoordinates(drone);
             drone.creeks.put(creek, creekCord);
         } catch (Exception ignored) { }
     }
@@ -46,7 +46,7 @@ public class DataExtractor {
     private void extractSite(JSONObject extraInfo, Drone drone){
         try {
             String site = (String) extraInfo.getJSONArray("sites").get(0);
-            Coordinate siteCord = DroneActions.getCordinates(drone);
+            Coordinate siteCord = DroneActions.getCoordinates(drone);
             drone.emergencySites.put(site, siteCord);
         } catch (Exception ignored){ }
     }

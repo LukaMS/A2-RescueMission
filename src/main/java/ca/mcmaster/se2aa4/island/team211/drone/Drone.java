@@ -20,7 +20,7 @@ public class Drone {
 
     private final DataExtractor dataExtractor = new DataExtractor();
 
-    public String direction;
+    private String direction;
     public String initialDirection;
     public String left;
 
@@ -52,4 +52,7 @@ public class Drone {
     public void extractData(JSONObject extraInfo) {
         dataExtractor.extract(extraInfo,this, decisionMaker);
     }
+
+    public String getDirection(){return direction;}
+    public void setDirection(String dir){direction = dir;}
 }

@@ -53,7 +53,7 @@ public class DistanceCalculator {
     }
 
     private void setSiteXY(){
-        Map.Entry<String,Coordinate> entry = drone.emergencySites.entrySet().iterator().next(); //extract site x and y coord.
+        Map.Entry<String,Coordinate> entry = drone.emergencySites.entrySet().iterator().next(); //extract site x and y coordinates.
         siteX = (int) entry.getValue().xCoordinate;
         siteY = (int) entry.getValue().yCoordinate;
     }

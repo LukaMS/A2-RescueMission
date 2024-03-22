@@ -91,7 +91,7 @@ public abstract class PhaseOneCommonDecisions implements DecisionMaker{
     public JSONObject echoAhead(){
         lastAction = Action.echo;
         JSONObject parameter = new JSONObject();
-        parameter.put("direction", drone.direction);
+        parameter.put("direction", drone.getDirection());
         return sendDecision(lastAction, parameter);
     }
 

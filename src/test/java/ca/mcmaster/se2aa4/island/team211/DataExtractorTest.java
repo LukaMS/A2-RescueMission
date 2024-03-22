@@ -45,8 +45,8 @@ class DataExtractorTest {
     void setUp(Action lastaction){
         drone = new Drone();
         drone.decisionMaker = new FakeDecisionMaker(lastaction);
-        this.drone.direction = "S";
-        this.drone.initialDirection = drone.direction;
+        this.drone.setDirection("S");
+        this.drone.initialDirection = drone.getDirection();
         this.drone.x_cord = 0;
         this.drone.y_cord = 0;
     }

@@ -35,7 +35,7 @@ public class FindStart extends PhaseOneCommonDecisions {
 
     public JSONObject findStart(){
         JSONObject params = new JSONObject();
-        switch (drone.direction){
+        switch (drone.getDirection()){
             case "N", "S":
                 params.put("direction", "W");
                 break;

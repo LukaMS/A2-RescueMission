@@ -21,7 +21,7 @@ class CreekFinderTest  {
         drone = new Drone();
         this.drone.x_cord = 6;
         this.drone.y_cord = 12;
-        this.drone.direction = "N";
+        this.drone.setDirection("N");
         setUpFakeCreeks();
         creekFinder = new CreekFinder(drone, "RIGHT");
         drone.decisionMaker = creekFinder;
@@ -118,7 +118,7 @@ class CreekFinderTest  {
 
         JSONObject decision = drone.decisionMaker.makeDecision();
         JSONObject parameter = new JSONObject();
-        parameter.put("direction", drone.direction);
+        parameter.put("direction", drone.getDirection());
         JSONObject expectedDecision = new JSONObject();
         expectedDecision.put("action", "echo").put("parameters", parameter);
 
@@ -248,7 +248,7 @@ class CreekFinderTest  {
 
         JSONObject decision = drone.decisionMaker.makeDecision();
         JSONObject parameter = new JSONObject();
-        parameter.put("direction", drone.direction);
+        parameter.put("direction", drone.getDirection());
         JSONObject expectedDecision = new JSONObject();
         expectedDecision.put("action", "echo").put("parameters", parameter);
 

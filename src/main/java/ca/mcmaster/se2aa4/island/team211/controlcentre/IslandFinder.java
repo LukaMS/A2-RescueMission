@@ -73,7 +73,7 @@ public class IslandFinder extends PhaseOneCommonDecisions {
                 else{
                     turnCount = 0;
                     adjust = false;
-                    return echoDirection(drone.direction);
+                    return echoDirection(drone.getDirection());
                 }
             }
             default: {return null;}

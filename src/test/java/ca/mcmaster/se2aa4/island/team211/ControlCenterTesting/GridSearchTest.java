@@ -20,7 +20,7 @@ class GridSearchTest  {
         drone = new Drone();
         this.drone.x_cord = 6;
         this.drone.y_cord = 12;
-        this.drone.direction = "N";
+        this.drone.setDirection("N");
         gridSearch = new GridSearch(drone, "RIGHT");
         drone.decisionMaker = gridSearch;
     }
@@ -59,7 +59,7 @@ class GridSearchTest  {
 
         JSONObject decision = drone.decisionMaker.makeDecision();
         JSONObject parameter = new JSONObject();
-        parameter.put("direction", drone.direction);
+        parameter.put("direction", drone.getDirection());
         JSONObject expectedDecision = new JSONObject();
         expectedDecision.put("action", "echo").put("parameters", parameter);
 

@@ -31,7 +31,7 @@ public class Explorer implements IExplorerRaid {
         drone.initialize(info);
 
         if (logger.isInfoEnabled()) {
-            logger.info("The drone is facing {}", drone.direction);
+            logger.info("The drone is facing {}", drone.getDirection());
             logger.info("Battery level is {}", drone.battery.batteryLevel);
         }
 
