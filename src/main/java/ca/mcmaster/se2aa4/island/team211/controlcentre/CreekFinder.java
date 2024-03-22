@@ -1,6 +1,8 @@
 /*
-Similar logic to Gridsearch while scanning, except it turns around once it reaches OCEAN,
-or it exits the range of the closest creek
+Similar logic to GridSearch while scanning, except it turns around once it reaches OCEAN,
+or it exits the range of the closest creek. It creates a radius around the site, where the radius is equal to the distance
+to the closest creek. Once the drone is out of the radius, even if it finds a new creek, it will not be closer than the
+old one, so it can turn around early.
  */
 
 package ca.mcmaster.se2aa4.island.team211.controlcentre;
@@ -14,6 +16,10 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 public class CreekFinder extends PhaseOneCommonDecisions {
+
+    private static final String right = "RIGHT";
+    private static final String left = "LEFT";
+
     DistanceCalculator distanceCalculator;
     private float minRadius;
     private float droneDistanceToSite;
@@ -55,8 +61,8 @@ public class CreekFinder extends PhaseOneCommonDecisions {
     @Override
     public JSONObject makeDecision() {
         setDroneDistanceToSite();
-        logger.info("Drone to Site: " + droneDistanceToSite);
-        logger.info("Closest Creek: " + minRadius);
+        logger.info("Drone to Site: {}", droneDistanceToSite);
+        logger.info("Closest Creek: {}", minRadius);
         if (drone.creeks.size() > creekSize){
             creekSize = drone.creeks.size();
             setMinRadius();
@@ -69,25 +75,24 @@ public class CreekFinder extends PhaseOneCommonDecisions {
         switch (lastAction){
             case null:
             case fly, heading: {
-                return super.scanPosition(); // lastAction := heading
-            }// lastAction := scan
+                return super.scanPosition(); // lastAction := scan
+            }
             case echo: {
-                if(outOfRange()){outOfRadiusPermanent = true;}
+                if(outOfRange()){outOfRadiusPermanent = true;} //Stop once out of range of closest creek
                 //if found ground fly to it
                 if (super.foundGround(drone)){
                     turned = false;
                     return super.flyToGround(); // lastAction := fly
-                } //if didn't find ground, but just turned, then reAlign position
-                else {
+                } else { //if didn't find ground, but just turned, then reAlign position
                     if (turned){
                         turned = false;
                         return super.reAlign(); // shifts position
                     } else { // if didn't find ground, and didn't just turn, then turn
-                        if (Objects.equals(lastTurn, "RIGHT")) {
-                            turnDirection = "RIGHT";
+                        if (Objects.equals(lastTurn, right)) {
+                            turnDirection = right;
                         } // lastAction := heading
                         else{
-                            turnDirection = "LEFT";
+                            turnDirection = left;
                         }
                         turnCount = 0;
                         if (drone.radar.range > 3 && Objects.equals(drone.radar.found,"OUT_OF_RANGE")){
@@ -100,8 +105,8 @@ public class CreekFinder extends PhaseOneCommonDecisions {
             }
             case scan: {
                 if (outOfRange()){ //if the drone is out of min range, then turn around
-                    if (Objects.equals(lastTurn, "RIGHT")) {turnDirection = "RIGHT";}
-                    else{turnDirection = "LEFT";}
+                    if (Objects.equals(lastTurn, right)) {turnDirection = right;}
+                    else{turnDirection = left;}
                     turnCount = 0;
                     return super.uTurn();
                 }

@@ -9,6 +9,9 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 public class IslandFinder extends PhaseOneCommonDecisions {
+
+    private static final String right = "RIGHT";
+    private static final String left = "LEFT";
     private String lastEchoDirection = "RIGHT";
     private boolean adjust = true;
 
@@ -23,7 +26,7 @@ public class IslandFinder extends PhaseOneCommonDecisions {
     public JSONObject makeDecision() {
         switch(lastAction){
             case null: {
-                lastEchoDirection = "RIGHT";
+                lastEchoDirection = right;
                 return echoDirection(drone.right);
             }
             case echo: {
@@ -41,11 +44,11 @@ public class IslandFinder extends PhaseOneCommonDecisions {
                 if (flyToGround){
                     return super.scanPosition(); // lastAction := scan
                 }
-                if (!Objects.equals(lastEchoDirection,"LEFT")){
-                    lastEchoDirection = "LEFT";
+                if (!Objects.equals(lastEchoDirection,left)){
+                    lastEchoDirection = left;
                     return echoDirection(drone.left); // lastAction := echo
                 } else{
-                    lastEchoDirection = "RIGHT";
+                    lastEchoDirection = right;
                     return echoDirection(drone.right); // lastAction := echo
                 }
             }
@@ -86,7 +89,7 @@ public class IslandFinder extends PhaseOneCommonDecisions {
             }
             case 1, 2-> {
                 turnCount++;
-                if (Objects.equals(lastEchoDirection, "LEFT")) {
+                if (Objects.equals(lastEchoDirection, left)) {
                     return super.turnLeft();
                 } else {
                     return super.turnRight();
@@ -94,7 +97,7 @@ public class IslandFinder extends PhaseOneCommonDecisions {
             }
             case 3 -> {
                 turnCount++;
-                if (Objects.equals(lastEchoDirection, "LEFT")) {
+                if (Objects.equals(lastEchoDirection, left)) {
                     return super.turnRight();
                 } else {
                     return super.turnLeft();

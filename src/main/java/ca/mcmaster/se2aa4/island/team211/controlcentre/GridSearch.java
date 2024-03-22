@@ -10,6 +10,9 @@ import java.util.Objects;
 
 public class GridSearch extends PhaseOneCommonDecisions {
 
+    private static final String right = "RIGHT";
+    private static final String left = "LEFT";
+
     public GridSearch(Drone drone, String lastTurn) {
         setDrone(drone);
         setFlyToGround(false);
@@ -32,7 +35,6 @@ public class GridSearch extends PhaseOneCommonDecisions {
           10. if last turn was right -> turn right again -> repeat from 3
           11. if last turn was left -> turn left again -> repeat from 3
         */
-
 
     @Override
     public JSONObject makeDecision() {
@@ -61,11 +63,11 @@ public class GridSearch extends PhaseOneCommonDecisions {
                         setTurned(false);
                         return super.reAlign(); // shifts position
                     } else { // if didn't find ground, and didn't just turn, then turn
-                        if (Objects.equals(lastTurn, "RIGHT")) {
-                            turnDirection = "RIGHT";
+                        if (Objects.equals(lastTurn, right)) {
+                            turnDirection = right;
                         } // lastAction := heading
                         else {
-                            turnDirection = "LEFT";
+                            turnDirection = left;
                         }
                         turnCount = 0;
                         if (drone.radar.range <= 3 && Objects.equals(drone.radar.found, "OUT_OF_RANGE")) {
@@ -114,6 +116,4 @@ public class GridSearch extends PhaseOneCommonDecisions {
             }
         }
     }
-
-
 }
