@@ -24,60 +24,15 @@ public class IslandFinder extends PhaseOneCommonDecisions {
 
     @Override
     public JSONObject makeDecision() {
-        switch(lastAction){
-            case null: {
-                lastEchoDirection = right;
-                return echoDirection(drone.right);
-            }
-            case echo: {
-                if (super.foundGround(drone)){
-                    if (adjust) {
-                        return adjustHeading();
-                    }else{
-                        return super.flyToGround(); //loops flying and scanning for ground
-                    }
-                }else{
-                    return super.flyForward(); // lastAction := fly
-                }
-            }
-            case fly: {
-                if (flyToGround){
-                    return super.scanPosition(); // lastAction := scan
-                }
-                if (!Objects.equals(lastEchoDirection,left)){
-                    lastEchoDirection = left;
-                    return echoDirection(drone.left); // lastAction := echo
-                } else{
-                    lastEchoDirection = right;
-                    return echoDirection(drone.right); // lastAction := echo
-                }
-            }
-            case scan: {
-                if (flyToGround) {
-                    if (super.overOcean()) {
-                        return super.flyToGround(); // lastAction := fly
-                    } else {
-                        drone.decisionMaker = new GridSearch(drone, lastEchoDirection);
-                        return super.scanPosition();
-                    }
-                }
-                return null;
-            }
-            case heading: {
-                return super.flyToGround();
-            }
-            case RE_ALIGN:{
-                if (turnCount < 5) {
-                    return adjustHeading();
-                }
-                else{
-                    turnCount = 0;
-                    adjust = false;
-                    return echoDirection(drone.getDirection());
-                }
-            }
-            default: {return null;}
-        }
+        return switch (lastAction) {
+            case null -> echoDirection(drone.right);
+            case echo -> echoCase();
+            case fly -> flyCase();
+            case scan -> scanCase();
+            case heading -> super.flyToGround();
+            case RE_ALIGN -> realignCase();
+            default -> null;
+        };
     }
 
     private JSONObject adjustHeading() {
@@ -117,6 +72,54 @@ public class IslandFinder extends PhaseOneCommonDecisions {
         JSONObject parameter = new JSONObject();
         parameter.put("direction", direction);
         return super.sendDecision(lastAction, parameter);
+    }
+
+    private JSONObject echoCase(){
+        if (super.foundGround(drone)){
+            if (adjust) {
+                return adjustHeading();
+            }else{
+                return super.flyToGround(); //loops flying and scanning for ground
+            }
+        }else{
+            return super.flyForward(); // lastAction := fly
+        }
+    }
+
+    private JSONObject scanCase(){
+        if (flyToGround) {
+            if (super.overOcean()) {
+                return super.flyToGround(); // lastAction := fly
+            } else {
+                drone.decisionMaker = new GridSearch(drone, lastEchoDirection);
+                return super.scanPosition();
+            }
+        }
+        return null;
+    }
+
+    private JSONObject flyCase(){
+        if (flyToGround){
+            return super.scanPosition(); // lastAction := scan
+        }
+        if (!Objects.equals(lastEchoDirection,left)){
+            lastEchoDirection = left;
+            return echoDirection(drone.left); // lastAction := echo
+        } else{
+            lastEchoDirection = right;
+            return echoDirection(drone.right); // lastAction := echo
+        }
+    }
+
+    private JSONObject realignCase(){
+        if (turnCount < 5) {
+            return adjustHeading();
+        }
+        else{
+            turnCount = 0;
+            adjust = false;
+            return echoDirection(drone.getDirection());
+        }
     }
 
     public String getLastEchoDirection() {return lastEchoDirection;}
