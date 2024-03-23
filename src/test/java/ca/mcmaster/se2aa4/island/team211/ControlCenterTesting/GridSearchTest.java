@@ -1,7 +1,6 @@
 package ca.mcmaster.se2aa4.island.team211.ControlCenterTesting;
 
 import ca.mcmaster.se2aa4.island.team211.controlcentre.Action;
-import ca.mcmaster.se2aa4.island.team211.controlcentre.CreekFinder;
 import ca.mcmaster.se2aa4.island.team211.controlcentre.GridSearch;
 import ca.mcmaster.se2aa4.island.team211.drone.Drone;
 import org.json.JSONArray;
@@ -21,7 +20,7 @@ class GridSearchTest  {
         drone = new Drone();
         this.drone.x_cord = 6;
         this.drone.y_cord = 12;
-        this.drone.direction = "N";
+        this.drone.setDirection("N");
         gridSearch = new GridSearch(drone, "RIGHT");
         drone.decisionMaker = gridSearch;
     }
@@ -60,7 +59,7 @@ class GridSearchTest  {
 
         JSONObject decision = drone.decisionMaker.makeDecision();
         JSONObject parameter = new JSONObject();
-        parameter.put("direction", drone.direction);
+        parameter.put("direction", drone.getDirection());
         JSONObject expectedDecision = new JSONObject();
         expectedDecision.put("action", "echo").put("parameters", parameter);
 
@@ -88,7 +87,7 @@ class GridSearchTest  {
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         gridSearch.setTurnDirection("RIGHT");
-        gridSearch.setLastAction(Action.uTurn);
+        gridSearch.setLastAction(Action.U_TURN);
 
         JSONObject decision = drone.decisionMaker.makeDecision();
         JSONObject parameter = new JSONObject();
@@ -104,7 +103,7 @@ class GridSearchTest  {
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         gridSearch.setTurnDirection("LEFT");
-        gridSearch.setLastAction(Action.uTurn2);
+        gridSearch.setLastAction(Action.U_TURN_2);
 
         JSONObject decision = drone.decisionMaker.makeDecision();
         JSONObject parameter = new JSONObject();
@@ -120,7 +119,7 @@ class GridSearchTest  {
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         gridSearch.setTurnDirection("RIGHT");
-        gridSearch.setLastAction(Action.reAlign);
+        gridSearch.setLastAction(Action.RE_ALIGN);
 
         JSONObject decision = drone.decisionMaker.makeDecision();
         JSONObject parameter = new JSONObject();

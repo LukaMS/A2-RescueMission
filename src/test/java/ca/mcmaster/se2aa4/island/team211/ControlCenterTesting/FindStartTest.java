@@ -25,7 +25,7 @@ class FindStartTest  {
     void testFindStartWhenNotAlreadyFound() {
         Drone mockDrone = new Drone();
         FindStart findStart = new FindStart(mockDrone);
-        mockDrone.direction = "E";
+        mockDrone.setDirection("E");
         JSONObject decision = new JSONObject();
         JSONObject parameter = new JSONObject();
         parameter.put("direction", "N");
@@ -41,7 +41,7 @@ class FindStartTest  {
         Drone mockDrone = new Drone();
         FindStart findStart = new FindStart(mockDrone);
         findStart.setLastAction(Action.echo);
-        mockDrone.direction = "E";
+        mockDrone.setDirection("E");
         mockDrone.radar.range = 10;
         JSONObject decision = new JSONObject();
         decision.put("action", Action.scan);

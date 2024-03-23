@@ -21,7 +21,7 @@ class CreekFinderTest  {
         drone = new Drone();
         this.drone.x_cord = 6;
         this.drone.y_cord = 12;
-        this.drone.direction = "N";
+        this.drone.setDirection("N");
         setUpFakeCreeks();
         creekFinder = new CreekFinder(drone, "RIGHT");
         drone.decisionMaker = creekFinder;
@@ -118,7 +118,7 @@ class CreekFinderTest  {
 
         JSONObject decision = drone.decisionMaker.makeDecision();
         JSONObject parameter = new JSONObject();
-        parameter.put("direction", drone.direction);
+        parameter.put("direction", drone.getDirection());
         JSONObject expectedDecision = new JSONObject();
         expectedDecision.put("action", "echo").put("parameters", parameter);
 
@@ -196,7 +196,7 @@ class CreekFinderTest  {
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         creekFinder.setTurnDirection("RIGHT");
-        creekFinder.setLastAction(Action.uTurn);
+        creekFinder.setLastAction(Action.U_TURN);
 
         JSONObject decision = drone.decisionMaker.makeDecision();
         JSONObject parameter = new JSONObject();
@@ -212,7 +212,7 @@ class CreekFinderTest  {
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         creekFinder.setTurnDirection("LEFT");
-        creekFinder.setLastAction(Action.uTurn2);
+        creekFinder.setLastAction(Action.U_TURN_2);
 
         JSONObject decision = drone.decisionMaker.makeDecision();
         JSONObject parameter = new JSONObject();
@@ -228,7 +228,7 @@ class CreekFinderTest  {
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         creekFinder.setTurnDirection("RIGHT");
-        creekFinder.setLastAction(Action.reAlign);
+        creekFinder.setLastAction(Action.RE_ALIGN);
 
         JSONObject decision = drone.decisionMaker.makeDecision();
         JSONObject parameter = new JSONObject();
@@ -244,11 +244,11 @@ class CreekFinderTest  {
         drone.battery.batteryLevel = 2000;
         drone.x_cord = 20;
         creekFinder.setTurnDirection("RIGHT");
-        creekFinder.setLastAction(Action.returnToRadius);
+        creekFinder.setLastAction(Action.RETURN_TO_RADIUS);
 
         JSONObject decision = drone.decisionMaker.makeDecision();
         JSONObject parameter = new JSONObject();
-        parameter.put("direction", drone.direction);
+        parameter.put("direction", drone.getDirection());
         JSONObject expectedDecision = new JSONObject();
         expectedDecision.put("action", "echo").put("parameters", parameter);
 
@@ -259,7 +259,7 @@ class CreekFinderTest  {
     void testCreekFinderMakeDecisionReturnToRadiusOutOfRange(){
         drone.battery.batteryLevel = 2000;
         creekFinder.setTurnDirection("RIGHT");
-        creekFinder.setLastAction(Action.returnToRadius);
+        creekFinder.setLastAction(Action.RETURN_TO_RADIUS);
 
         JSONObject decision = drone.decisionMaker.makeDecision();
         JSONObject expectedDecision = new JSONObject();

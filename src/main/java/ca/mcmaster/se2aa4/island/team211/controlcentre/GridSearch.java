@@ -10,6 +10,9 @@ import java.util.Objects;
 
 public class GridSearch extends PhaseOneCommonDecisions {
 
+    private static final String right = "RIGHT";
+    private static final String left = "LEFT";
+
     public GridSearch(Drone drone, String lastTurn) {
         setDrone(drone);
         setFlyToGround(false);
@@ -33,87 +36,88 @@ public class GridSearch extends PhaseOneCommonDecisions {
           11. if last turn was left -> turn left again -> repeat from 3
         */
 
-
     @Override
     public JSONObject makeDecision() {
-        //stop conditions
+        //change DecisionMaker conditions
         if (!drone.emergencySites.isEmpty() && !drone.creeks.isEmpty()) {
             drone.decisionMaker = new CreekFinder(drone, lastTurn);
             return super.flyForward();
         }
-        if (drone.battery.batteryLevel < 1000 || drone.y_cord == 0) {
-            return super.stop();
-        }
 
-        switch (lastAction) {
-            case null:
-            case fly, heading: {
-                return super.scanPosition();
-            }// lastAction := scan
-            case echo: {
-                //if found ground fly to it
-                if (super.foundGround(drone)) {
-                    setTurned(false);
-                    return super.flyToGround(); // lastAction := fly
-                } //if didn't find ground, but just turned, then reAlign position
+        //stop conditions
+        if (drone.battery.batteryLevel < 1000 || drone.y_cord == 0) { return super.stop(); }
+
+        //determine next action to perform based off last action
+        return switch (lastAction) {
+            case null -> super.scanPosition();
+            case fly, heading -> super.scanPosition();// lastAction := scan
+            case echo -> echoCase();
+            case scan -> scanCase();
+            case RE_ALIGN -> super.reAlign();
+            case U_TURN -> uTurnCase();
+            case U_TURN_2 -> uTurn2Case();
+            default -> null;
+        };
+    }
+
+    private JSONObject echoCase(){
+        //if found ground fly to it
+        if (super.foundGround(drone)) {
+            setTurned(false);
+            return super.flyToGround(); // lastAction := fly
+        } //if didn't find ground, but just turned, then reAlign position
+        else {
+            if (turned) {
+                setTurned(false);
+                return super.reAlign(); // shifts position
+            } else { // if didn't find ground, and didn't just turn, then turn
+                if (Objects.equals(lastTurn, right)) {
+                    turnDirection = right;
+                }
                 else {
-                    if (turned) {
-                        setTurned(false);
-                        return super.reAlign(); // shifts position
-                    } else { // if didn't find ground, and didn't just turn, then turn
-                        if (Objects.equals(lastTurn, "RIGHT")) {
-                            turnDirection = "RIGHT";
-                        } // lastAction := heading
-                        else {
-                            turnDirection = "LEFT";
-                        }
-                        turnCount = 0;
-                        if (drone.radar.range <= 3 && Objects.equals(drone.radar.found, "OUT_OF_RANGE")) {
-                            return super.uTurn2();
-                        } else {
-                            return super.uTurn();
-                        }
-                    }
+                    turnDirection = left;
                 }
-            }
-            case scan: {
-                if (super.overOcean()) {
-                    if (flyToGround) {
-                        return super.flyToGround();
-                    } // lastAction := fly
-                    else {
-                        return super.echoAhead();
-                    } // lastAction := echo
+                turnCount = 0;
+                if (drone.radar.range <= 3 && Objects.equals(drone.radar.found, "OUT_OF_RANGE")) {
+                    return super.uTurn2();
                 } else {
-                    flyToGround = false;
-                    return super.flyForward(); // lastAction := fly
+                    return super.uTurn();
                 }
-
-            }
-            case reAlign: {
-                return super.reAlign();
-            }
-            case uTurn: {
-                if (turnCount < 6) {
-                    return super.uTurn(); //lastAction := uTurn
-                } else {
-                    turnCount = 0;
-                    return super.echoAhead(); // lastAction := echo
-                }
-            }
-            case uTurn2: {
-                if (turnCount < 6) {
-                    return super.uTurn2(); //lastAction := uTurn
-                } else {
-                    turnCount = 0;
-                    return super.echoAhead(); // lastAction := echo
-                }
-            }
-            default: {
-                return null;
             }
         }
     }
 
+    private JSONObject scanCase() {
+        if (super.overOcean()) {
+            if (flyToGround) {
+                return super.flyToGround();  // lastAction := fly
+            }
+            else {
+                return super.echoAhead();  // lastAction := echo
+            }
+        } else {
+            flyToGround = false;
+            return super.flyForward(); // lastAction := fly
+        }
+    }
 
+    private JSONObject uTurnCase(){
+        if (turnCount < 6) {
+            return super.uTurn();  //lastAction := uTurn
+        }
+        else {
+            turnCount = 0;
+            return super.echoAhead(); // lastAction := echo
+        }
+    }
+
+    private JSONObject uTurn2Case(){
+        if (turnCount < 6) {
+            return super.uTurn2(); //lastAction := uTurn
+        }
+        else {
+            turnCount = 0;
+            return super.echoAhead(); // lastAction := echo
+        }
+    }
 }

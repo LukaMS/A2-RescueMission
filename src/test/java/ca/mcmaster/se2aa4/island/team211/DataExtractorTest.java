@@ -45,8 +45,8 @@ class DataExtractorTest {
     void setUp(Action lastaction){
         drone = new Drone();
         drone.decisionMaker = new FakeDecisionMaker(lastaction);
-        this.drone.direction = "S";
-        this.drone.initialDirection = drone.direction;
+        this.drone.setDirection("S");
+        this.drone.initialDirection = drone.getDirection();
         this.drone.x_cord = 0;
         this.drone.y_cord = 0;
     }
@@ -58,7 +58,7 @@ class DataExtractorTest {
         extraInfo.put("range", 100);
         extraInfo.put("found", "ground");
 
-        drone.extractdata(extraInfo);
+        drone.extractData(extraInfo);
         assertEquals(100, drone.radar.range);
         assertEquals( "ground", drone.radar.found);
     }
@@ -71,7 +71,7 @@ class DataExtractorTest {
         extraInfo.put("sites", new JSONArray().put("siteId"));
         extraInfo.put("biomes", new JSONArray().put("OCEAN"));
 
-        drone.extractdata(extraInfo);
+        drone.extractData(extraInfo);
         assertTrue(drone.creeks.containsKey("creekId"));
         assertTrue(drone.emergencySites.containsKey("siteId"));
         assertEquals("OCEAN", drone.currentBiomes.get(0));

@@ -30,7 +30,7 @@ class IslandFinderTest  {
         IslandFinder islandFinder = new IslandFinder(mockDrone);
         mockDrone.x_cord = 1;
         mockDrone.y_cord = 1;
-        mockDrone.direction = "E";
+        mockDrone.setDirection("E");
 
         // Test cases for each possible last action
         nullTest(islandFinder,mockDrone);
@@ -45,7 +45,7 @@ class IslandFinderTest  {
 
         for (int i = 0; i < 7; i++) {
             islandFinder.setTurnCount(i);
-            islandFinder.setLastAction(Action.reAlign);
+            islandFinder.setLastAction(Action.RE_ALIGN);
             reAlignTest(islandFinder, mockDrone); //also tests adjustHeading method
         }
 
@@ -73,7 +73,7 @@ class IslandFinderTest  {
         islandFinder.setAdjust(true);
 
         JSONObject decisionTest = islandFinder.makeDecision();
-        assertEquals(Action.reAlign, islandFinder.getLastAction());
+        assertEquals(Action.RE_ALIGN, islandFinder.getLastAction());
         assertEquals(1, islandFinder.getTurnCount());
 
         JSONObject decision = new JSONObject();
@@ -133,7 +133,7 @@ class IslandFinderTest  {
         switch (islandFinder.getTurnCount()){
             case 0 -> {
                 decisionTest = islandFinder.makeDecision();
-                assertEquals(Action.reAlign, islandFinder.getLastAction());
+                assertEquals(Action.RE_ALIGN, islandFinder.getLastAction());
                 JSONObject decision = new JSONObject();
                 decision.put("action", Action.fly);
                 assertEquals(decision.toString(), decisionTest.toString());
@@ -144,7 +144,7 @@ class IslandFinderTest  {
             }
             case 1, 2-> {
                 decisionTest = islandFinder.makeDecision();
-                assertEquals(Action.reAlign, islandFinder.getLastAction());
+                assertEquals(Action.RE_ALIGN, islandFinder.getLastAction());
                 assertEquals("RIGHT", islandFinder.getLastEchoDirection());
 
                 JSONObject parameter = new JSONObject();
@@ -156,11 +156,11 @@ class IslandFinderTest  {
                 if (islandFinder.getTurnCount() == 2) {
                     assertEquals(6, mockDrone.x_cord);
                     assertEquals(2, mockDrone.y_cord);
-                    assertEquals("S", mockDrone.direction);
+                    assertEquals("S", mockDrone.getDirection());
                 }else{
                     assertEquals(5, mockDrone.x_cord);
                     assertEquals(3, mockDrone.y_cord);
-                    assertEquals("W", mockDrone.direction);
+                    assertEquals("W", mockDrone.getDirection());
                 }
 
                 assertTrue(islandFinder.getTurnCount() == 2 || islandFinder.getTurnCount() == 3);
@@ -168,7 +168,7 @@ class IslandFinderTest  {
             }
             case 3 -> {
                 decisionTest = islandFinder.makeDecision();
-                assertEquals(Action.reAlign, islandFinder.getLastAction());
+                assertEquals(Action.RE_ALIGN, islandFinder.getLastAction());
                 assertEquals("RIGHT", islandFinder.getLastEchoDirection());
 
                 JSONObject parameter = new JSONObject();
@@ -179,7 +179,7 @@ class IslandFinderTest  {
                 assertEquals(decision.toString(), decisionTest.toString());
                 assertEquals(4, mockDrone.x_cord);
                 assertEquals(4, mockDrone.y_cord);
-                assertEquals("S", mockDrone.direction);
+                assertEquals("S", mockDrone.getDirection());
 
                 assertEquals(4, islandFinder.getTurnCount());
 
@@ -188,14 +188,14 @@ class IslandFinderTest  {
             case 4 -> {
                 decisionTest = islandFinder.makeDecision();
 
-                assertEquals(Action.reAlign, islandFinder.getLastAction());
+                assertEquals(Action.RE_ALIGN, islandFinder.getLastAction());
 
                 JSONObject decision = new JSONObject();
                 decision.put("action", Action.scan);
                 assertEquals(decision.toString(), decisionTest.toString());
                 assertEquals(4, mockDrone.x_cord);
                 assertEquals(4, mockDrone.y_cord);
-                assertEquals("S", mockDrone.direction);
+                assertEquals("S", mockDrone.getDirection());
 
                 assertEquals(5, islandFinder.getTurnCount());
 
@@ -207,7 +207,7 @@ class IslandFinderTest  {
                 assertEquals(Action.echo, islandFinder.getLastAction());
 
                 JSONObject parameter = new JSONObject();
-                parameter.put("direction", mockDrone.direction);
+                parameter.put("direction", mockDrone.getDirection());
                 JSONObject decision = new JSONObject();
                 decision.put("action", Action.echo).put("parameters", parameter);
 
@@ -218,7 +218,7 @@ class IslandFinderTest  {
         }
     }
     void defaultTest(IslandFinder islandFinder){
-        islandFinder.setLastAction(Action.uTurn);
+        islandFinder.setLastAction(Action.U_TURN);
         JSONObject decisionTest = islandFinder.makeDecision();
         assertNull(decisionTest);
 

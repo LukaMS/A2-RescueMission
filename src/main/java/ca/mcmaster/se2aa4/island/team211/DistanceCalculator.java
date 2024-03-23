@@ -52,8 +52,8 @@ public class DistanceCalculator {
         }
     }
 
-    private void setSiteXY(){
-        Map.Entry<String,Coordinate> entry = drone.emergencySites.entrySet().iterator().next(); //extract site x and y coord.
+    public void setSiteXY(){
+        Map.Entry<String,Coordinate> entry = drone.emergencySites.entrySet().iterator().next(); //extract site x and y coordinates.
         siteX = (int) entry.getValue().xCoordinate;
         siteY = (int) entry.getValue().yCoordinate;
     }
@@ -61,4 +61,8 @@ public class DistanceCalculator {
     public float distanceToSite(Drone drone1){
         return (float) Math.sqrt(Math.pow(drone1.x_cord-siteX, 2) + Math.pow(drone1.y_cord-siteY, 2) );
     }
+
+    public int getSiteX(){return siteX;}
+    public int getSiteY(){return siteY;}
+
 }

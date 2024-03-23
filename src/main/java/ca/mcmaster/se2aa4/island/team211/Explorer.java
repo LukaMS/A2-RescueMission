@@ -1,5 +1,5 @@
 /*
-Recieves decisions from DecisionMakers, and sends them to the game to perform actions
+Receives decisions from DecisionMakers, and sends them to the game to perform actions
  */
 
 package ca.mcmaster.se2aa4.island.team211;
@@ -7,7 +7,6 @@ package ca.mcmaster.se2aa4.island.team211;
 import java.io.StringReader;
 import java.util.Map;
 
-import ca.mcmaster.se2aa4.island.team211.controlcentre.Action;
 import ca.mcmaster.se2aa4.island.team211.drone.Drone;
 import ca.mcmaster.se2aa4.island.team211.locations.Coordinate;
 import org.apache.logging.log4j.LogManager;
@@ -28,12 +27,11 @@ public class Explorer implements IExplorerRaid {
         if (logger.isInfoEnabled()) { logger.info("** Initializing the Exploration Command Center");}
         JSONObject info = new JSONObject(new JSONTokener(new StringReader(s)));
         if (logger.isInfoEnabled()) {logger.info("** Initialization info:\n {}",info.toString(2));}
-
         this.drone = new Drone();
         drone.initialize(info);
 
         if (logger.isInfoEnabled()) {
-            logger.info("The drone is facing {}", drone.direction);
+            logger.info("The drone is facing {}", drone.getDirection());
             logger.info("Battery level is {}", drone.battery.batteryLevel);
         }
 
@@ -42,13 +40,13 @@ public class Explorer implements IExplorerRaid {
     @Override
     public String takeDecision() {
         if (logger.isInfoEnabled()) {
-            logger.info("** Current Location X: " + drone.droneActions.printCoords(drone)[0] + " Y: " + drone.droneActions.printCoords(drone)[1]);
-            logger.info("** Current Battery " + drone.battery.batteryLevel);
+            logger.info("** Current Location X: {} Y: {} ", drone.droneActions.printCoords(drone)[0], drone.droneActions.printCoords(drone)[1]);
+            logger.info("** Current Battery {}", drone.battery.batteryLevel);
         }
 
         try {
             JSONObject decision = drone.droneActions.getDecision(drone);
-            if (logger.isInfoEnabled()) {logger.info("** Decision: {}",decision);}
+            if (logger.isInfoEnabled()) {logger.info("** Decision: {}", decision);}
             return decision.toString();
         } catch (Exception e){
             if (logger.isErrorEnabled()) {logger.error(e.toString());}
@@ -56,29 +54,32 @@ public class Explorer implements IExplorerRaid {
         return null;
     }
 
+    /*
+    Displays the result of the performed action
+     */
     @Override
     public void acknowledgeResults(String s) {
         JSONObject response = new JSONObject(new JSONTokener(new StringReader(s)));
-        if (logger.isInfoEnabled()) {logger.info("** Response received:\n"+response.toString(2));}
+        if (logger.isInfoEnabled()) {logger.info("** Response received:\n {}",response.toString(2));}
 
-        Action.cost = response.getInt("cost");
-        if (logger.isInfoEnabled()) {logger.info("The cost of the action was {}", Action.cost);}
-        drone.battery.discharge(Action.cost);
+        int actionCost = response.getInt("cost");
+        if (logger.isInfoEnabled()) {logger.info("The cost of the action was {}", actionCost);}
+        drone.battery.discharge(actionCost);
 
-        Drone.status = response.getString("status");
-        if (logger.isInfoEnabled()) {logger.info("The status of the drone is {}", Drone.status);}
+        drone.status = response.getString("status");
+        if (logger.isInfoEnabled()) {logger.info("The status of the drone is {}", drone.status);}
 
         JSONObject extraInfo = response.getJSONObject("extras");
-        drone.extractdata(extraInfo);
+        drone.extractData(extraInfo);
 
         if (logger.isInfoEnabled()) {logger.info("Additional information received: {}", extraInfo);}
 
         //print set of keys with Coordinates
         for (Map.Entry<String, Coordinate> entry: drone.creeks.entrySet()) {
-            if (logger.isInfoEnabled()) {logger.info("Creek " + entry.getKey() + " x = " + entry.getValue().xCoordinate + " y = " + entry.getValue().yCoordinate);}
+            if (logger.isInfoEnabled()) {logger.info("Creek {} x = {}  y = {}", entry.getKey() , entry.getValue().xCoordinate , entry.getValue().yCoordinate);}
         }
         for (Map.Entry<String, Coordinate> entry: drone.emergencySites.entrySet()) {
-            if (logger.isInfoEnabled()) {logger.info("Site " + entry.getKey() + " x = " + entry.getValue().xCoordinate + " y = " + entry.getValue().yCoordinate);}
+            if (logger.isInfoEnabled()) {logger.info("Site {} x = {} y = {}", entry.getKey() , entry.getValue().xCoordinate , entry.getValue().yCoordinate);}
         }
     }
 
@@ -88,10 +89,10 @@ public class Explorer implements IExplorerRaid {
         DistanceCalculator distanceCalculator = new DistanceCalculator(drone);
         distanceCalculator.calculateDistances();
         for (Map.Entry<String,Float> entry2: distanceCalculator.getDistances().entrySet()) {
-            if (logger.isInfoEnabled()) {logger.info("Creek: " + entry2.getKey() + " Distance to Site: " + entry2.getValue());}
+            if (logger.isInfoEnabled()) {logger.info("Creek: {} Distance to Site: {} ", entry2.getKey(), entry2.getValue());}
         }
         String closestCreek =  distanceCalculator.determineClosest();
-        if (logger.isInfoEnabled()) {logger.info("Closest Creek to Emergency Site: " + closestCreek);}
+        if (logger.isInfoEnabled()) {logger.info("Closest Creek to Emergency Site: {}", closestCreek);}
 
         return closestCreek;
     }
